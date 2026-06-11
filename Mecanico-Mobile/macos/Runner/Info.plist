@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>$(PRODUCT_COPYRIGHT)</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<!-- Permisos para speech_to_text -->
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Necesitamos reconocer tu voz para llenar el reporte técnico automáticamente.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>El micrófono se usará para capturar el diagnóstico del mecánico.</string>
+
+	<!-- Permisos para image_picker -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceso a la galería para que puedas subir fotos del vehículo.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Necesitamos usar la cámara para tomar fotos de las piezas dañadas.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Se requiere el micrófono si vas a grabar videos del motor.</string>
+</dict>
+</plist>

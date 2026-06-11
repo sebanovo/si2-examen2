@@ -1,0 +1,69 @@
+<section class="space-y-6">
+	<section hlmCard>
+		<app-card-header
+			title="Candidatos disponibles"
+			description="Revisa solicitudes de servicio recomendadas para tu empresa"
+			icon="lucideListChecks"
+			[showAction]="false"
+		/>
+
+		<div hlmCardContent class="space-y-4">
+			@if (store.loading() && !store.hasLoaded()) {
+				<div class="space-y-4">
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+				</div>
+			} @else if (store.hasError()) {
+				<app-table-error
+					variant="destructive"
+					icon="lucideAlertCircle"
+					[description]="
+						store.error()?.message || 'Ocurrió un error inesperado'
+					"
+					title="No se pudieron cargar los candidatos"
+					[showAction]="true"
+					actionLabel="Reintentar"
+					(actionClick)="onRetry()"
+				/>
+			} @else if (store.isEmpty()) {
+				<app-empty-state
+					title="Sin candidatos"
+					description="No existen candidatos disponibles para tu empresa en este momento."
+					icon="lucideInbox"
+					[showAction]="false"
+				/>
+			} @else {
+				<app-candidate-table
+					[candidates]="store.candidates()"
+					[actingCandidateIds]="store.actingCandidateIds()"
+					(viewCandidate)="onViewCandidate($event)"
+					(acceptCandidate)="onAcceptCandidate($event)"
+					(rejectCandidate)="onRejectCandidate($event)"
+				/>
+
+				<div class="border-t pt-4">
+					<p class="text-muted-foreground text-sm">
+						Total candidatos: {{ store.count() }}
+					</p>
+				</div>
+			}
+		</div>
+	</section>
+
+	<app-candidate-detail-dialog
+		[open]="detailDialogOpen()"
+		[candidate]="store.selectedCandidate()"
+		[loading]="store.selectedCandidateLoading()"
+		[error]="store.selectedCandidateError()"
+		[acting]="
+			store.selectedCandidate()
+				? store.isCandidateActing(store.selectedCandidate()!.id)
+				: false
+		"
+		(openChange)="onDetailDialogOpenChange($event)"
+		(acceptCandidate)="onAcceptCandidate($event)"
+		(rejectCandidate)="onRejectCandidate($event)"
+	/>
+</section>

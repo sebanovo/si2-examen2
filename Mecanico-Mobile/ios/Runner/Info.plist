@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Mechanic Mobile</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>mechanic_mobile</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<!-- Permisos para speech_to_text -->
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Necesitamos reconocer tu voz para llenar el reporte técnico automáticamente.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>El micrófono se usará para capturar el diagnóstico del mecánico.</string>
+
+	<!-- Permisos para image_picker -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceso a la galería para que puedas subir fotos del vehículo.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Necesitamos usar la cámara para tomar fotos de las piezas dañadas.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Se requiere el micrófono si vas a grabar videos del motor.</string>
+
+	<!-- Permisos para notificaciones push -->
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<true/>
+
+	<!-- Permisos para geolocalización -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Esta aplicación necesita tu ubicación para mostrarte el mapa y el tracking del técnico.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Esta aplicación necesita tu ubicación incluso en segundo plano para actualizar tu posición.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Esta aplicación necesita tu ubicación para funcionar correctamente.</string>
+</dict>
+</plist>

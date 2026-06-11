@@ -1,0 +1,168 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-2xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Registrar técnico</h3>
+			<p hlmDialogDescription>Agrega un técnico operativo para tu proveedor.</p>
+		</hlm-dialog-header>
+
+		<form class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+			<section class="bg-muted/30 rounded-2xl border p-4">
+				<div class="flex items-center gap-3">
+					<div
+						class="bg-background flex size-10 items-center justify-center rounded-full border"
+					>
+						<ng-icon name="lucideUserPlus" />
+					</div>
+
+					<div>
+						<p class="font-medium">Información del técnico</p>
+						<p class="text-muted-foreground text-sm">
+							Registra sus datos principales y ubicación actual.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<div class="grid gap-4 sm:grid-cols-2">
+				<hlm-field>
+					<label hlmLabel for="firstName">Nombre</label>
+					<input
+						hlmInput
+						id="firstName"
+						type="text"
+						formControlName="firstName"
+						placeholder="Ej. Marco"
+					/>
+
+					@if (
+						form.controls.firstName.invalid && form.controls.firstName.touched
+					) {
+						<p class="text-destructive text-sm">El nombre es obligatorio.</p>
+					}
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="lastName">Apellido</label>
+					<input
+						hlmInput
+						id="lastName"
+						type="text"
+						formControlName="lastName"
+						placeholder="Ej. Soto"
+					/>
+
+					@if (
+						form.controls.lastName.invalid && form.controls.lastName.touched
+					) {
+						<p class="text-destructive text-sm">El apellido es obligatorio.</p>
+					}
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="phoneNumber">Teléfono</label>
+					<input
+						hlmInput
+						id="phoneNumber"
+						type="text"
+						formControlName="phoneNumber"
+						placeholder="Ej. 73533813"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="specialty">Especialidad</label>
+					<input
+						hlmInput
+						id="specialty"
+						type="text"
+						formControlName="specialty"
+						placeholder="Ej. Electricidad automotriz"
+					/>
+
+					@if (
+						form.controls.specialty.invalid && form.controls.specialty.touched
+					) {
+						<p class="text-destructive text-sm">
+							La especialidad es obligatoria.
+						</p>
+					}
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="currentLatitude">Latitud actual</label>
+					<input
+						hlmInput
+						id="currentLatitude"
+						type="number"
+						formControlName="currentLatitude"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="currentLongitude">Longitud actual</label>
+					<input
+						hlmInput
+						id="currentLongitude"
+						type="number"
+						formControlName="currentLongitude"
+					/>
+				</hlm-field>
+			</div>
+
+			<div class="rounded-xl border p-4">
+				<div class="flex items-center justify-between gap-3">
+					<div>
+						<p class="font-medium">Disponible</p>
+						<p class="text-muted-foreground text-sm">
+							Define si el técnico puede recibir servicios.
+						</p>
+					</div>
+
+					<hlm-switch formControlName="isAvailable" />
+				</div>
+			</div>
+
+			@if (error()) {
+				<div
+					class="border-destructive/30 bg-destructive/5 rounded-xl border p-4"
+				>
+					<p class="text-destructive font-medium">
+						No se pudo registrar el técnico
+					</p>
+
+					<p class="text-muted-foreground text-sm">
+						{{ error()?.message || "Ocurrió un error inesperado." }}
+					</p>
+				</div>
+			}
+
+			<hlm-dialog-footer>
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					[disabled]="loading()"
+					(click)="onOpenChange(false)"
+				>
+					<ng-icon name="lucideX" />
+					Cancelar
+				</button>
+
+				<button
+					hlmBtn
+					type="submit"
+					class="cursor-pointer"
+					[disabled]="loading()"
+				>
+					<ng-icon name="lucideSave" />
+					@if (loading()) {
+						Guardando...
+					} @else {
+						Guardar técnico
+					}
+				</button>
+			</hlm-dialog-footer>
+		</form>
+	</hlm-dialog-content>
+</hlm-dialog>

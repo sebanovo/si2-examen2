@@ -1,0 +1,332 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-4xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Registrar proveedor</h3>
+			<p hlmDialogDescription>
+				Crea el proveedor y su usuario administrador en una sola operación.
+			</p>
+		</hlm-dialog-header>
+
+		<form
+			class="flex max-h-[75vh] flex-col"
+			[formGroup]="form"
+			(ngSubmit)="onSubmit()"
+		>
+			<div class="flex-1 space-y-6 overflow-y-auto px-5 pr-2">
+				<section class="bg-muted/30 rounded-2xl border p-4">
+					<div class="flex items-center gap-3">
+						<div
+							class="bg-background flex size-10 items-center justify-center rounded-full border"
+						>
+							<ng-icon name="lucideUserPlus" />
+						</div>
+
+						<div>
+							<p class="font-medium">Usuario administrador</p>
+							<p class="text-muted-foreground text-sm">
+								Este usuario será el propietario administrativo del proveedor.
+							</p>
+						</div>
+					</div>
+				</section>
+
+				<div formGroupName="adminUser" class="grid gap-4 md:grid-cols-2">
+					<hlm-field>
+						<label hlmLabel for="adminEmail">Correo</label>
+						<input
+							hlmInput
+							id="adminEmail"
+							type="email"
+							formControlName="email"
+						/>
+					</hlm-field>
+
+					<hlm-field>
+						<label hlmLabel for="adminPassword">Contraseña</label>
+						<input
+							hlmInput
+							id="adminPassword"
+							type="password"
+							formControlName="password"
+						/>
+					</hlm-field>
+
+					<hlm-field>
+						<label hlmLabel for="adminFirstName">Nombre</label>
+						<input
+							hlmInput
+							id="adminFirstName"
+							type="text"
+							formControlName="firstName"
+						/>
+					</hlm-field>
+
+					<hlm-field>
+						<label hlmLabel for="adminLastName">Apellido</label>
+						<input
+							hlmInput
+							id="adminLastName"
+							type="text"
+							formControlName="lastName"
+						/>
+					</hlm-field>
+
+					<hlm-field class="md:col-span-2">
+						<label hlmLabel for="adminPhoneNumber">Teléfono</label>
+						<input
+							hlmInput
+							id="adminPhoneNumber"
+							type="text"
+							formControlName="phoneNumber"
+						/>
+					</hlm-field>
+				</div>
+
+				<section class="bg-muted/30 rounded-2xl border p-4">
+					<div class="flex items-center gap-3">
+						<div
+							class="bg-background flex size-10 items-center justify-center rounded-full border"
+						>
+							<ng-icon name="lucideStore" />
+						</div>
+
+						<div>
+							<p class="font-medium">Información del proveedor</p>
+							<p class="text-muted-foreground text-sm">
+								Datos comerciales, ubicación y capacidad operativa.
+							</p>
+						</div>
+					</div>
+				</section>
+
+				<div formGroupName="provider" class="space-y-5">
+					<hlm-field>
+						<p hlmLabel>Tipo de proveedor</p>
+
+						<div class="grid gap-3 md:grid-cols-2">
+							<button
+								type="button"
+								class="hover:bg-muted/40 cursor-pointer rounded-2xl border p-4 text-left transition"
+								[class.border-primary]="
+									form.controls.provider.controls.providerType.value ===
+									'WORKSHOP'
+								"
+								[class.bg-primary/5]="
+									form.controls.provider.controls.providerType.value ===
+									'WORKSHOP'
+								"
+								(click)="
+									form.controls.provider.controls.providerType.setValue(
+										'WORKSHOP'
+									)
+								"
+							>
+								<div class="flex items-start gap-3">
+									<span
+										class="mt-1 size-4 rounded-full border"
+										[class.border-primary]="
+											form.controls.provider.controls.providerType.value ===
+											'WORKSHOP'
+										"
+										[class.bg-primary]="
+											form.controls.provider.controls.providerType.value ===
+											'WORKSHOP'
+										"
+									></span>
+
+									<span>
+										<span class="block font-medium">Workshop</span>
+										<span class="text-muted-foreground text-sm">
+											Taller o empresa con operación organizada.
+										</span>
+									</span>
+								</div>
+							</button>
+
+							<button
+								type="button"
+								class="hover:bg-muted/40 cursor-pointer rounded-2xl border p-4 text-left transition"
+								[class.border-primary]="
+									form.controls.provider.controls.providerType.value ===
+									'INDEPENDENT_MECHANIC'
+								"
+								[class.bg-primary/5]="
+									form.controls.provider.controls.providerType.value ===
+									'INDEPENDENT_MECHANIC'
+								"
+								(click)="
+									form.controls.provider.controls.providerType.setValue(
+										'INDEPENDENT_MECHANIC'
+									)
+								"
+							>
+								<div class="flex items-start gap-3">
+									<span
+										class="mt-1 size-4 rounded-full border"
+										[class.border-primary]="
+											form.controls.provider.controls.providerType.value ===
+											'INDEPENDENT_MECHANIC'
+										"
+										[class.bg-primary]="
+											form.controls.provider.controls.providerType.value ===
+											'INDEPENDENT_MECHANIC'
+										"
+									></span>
+
+									<span>
+										<span class="block font-medium">Independent mechanic</span>
+										<span class="text-muted-foreground text-sm">
+											Mecánico independiente que opera por cuenta propia.
+										</span>
+									</span>
+								</div>
+							</button>
+						</div>
+					</hlm-field>
+
+					<div class="grid gap-4 md:grid-cols-2">
+						<hlm-field>
+							<label hlmLabel for="businessName">Nombre comercial</label>
+							<input
+								hlmInput
+								id="businessName"
+								type="text"
+								formControlName="businessName"
+							/>
+						</hlm-field>
+
+						<hlm-field>
+							<label hlmLabel for="legalName">Razón social</label>
+							<input
+								hlmInput
+								id="legalName"
+								type="text"
+								formControlName="legalName"
+							/>
+						</hlm-field>
+
+						<hlm-field class="md:col-span-2">
+							<label hlmLabel for="description">Descripción</label>
+							<input
+								hlmInput
+								id="description"
+								type="text"
+								formControlName="description"
+							/>
+						</hlm-field>
+
+						<hlm-field>
+							<label hlmLabel for="contactEmail">Correo de contacto</label>
+							<input
+								hlmInput
+								id="contactEmail"
+								type="email"
+								formControlName="contactEmail"
+							/>
+						</hlm-field>
+
+						<hlm-field>
+							<label hlmLabel for="contactPhone">Teléfono de contacto</label>
+							<input
+								hlmInput
+								id="contactPhone"
+								type="text"
+								formControlName="contactPhone"
+							/>
+						</hlm-field>
+
+						<hlm-field>
+							<label hlmLabel for="city">Ciudad</label>
+							<input hlmInput id="city" type="text" formControlName="city" />
+						</hlm-field>
+
+						<hlm-field>
+							<label hlmLabel for="address">Dirección</label>
+							<input
+								hlmInput
+								id="address"
+								type="text"
+								formControlName="address"
+							/>
+						</hlm-field>
+
+						<hlm-field>
+							<label hlmLabel for="baseLatitude">Latitud base</label>
+							<input
+								hlmInput
+								id="baseLatitude"
+								type="number"
+								formControlName="baseLatitude"
+							/>
+						</hlm-field>
+
+						<hlm-field>
+							<label hlmLabel for="baseLongitude">Longitud base</label>
+							<input
+								hlmInput
+								id="baseLongitude"
+								type="number"
+								formControlName="baseLongitude"
+							/>
+						</hlm-field>
+
+						<hlm-field class="md:col-span-2">
+							<label hlmLabel for="maxConcurrentServices">
+								Servicios máximos concurrentes
+							</label>
+							<input
+								hlmInput
+								id="maxConcurrentServices"
+								type="number"
+								min="1"
+								formControlName="maxConcurrentServices"
+							/>
+						</hlm-field>
+					</div>
+				</div>
+			</div>
+
+			@if (error()) {
+				<div
+					class="border-destructive/30 bg-destructive/5 rounded-xl border p-4"
+				>
+					<p class="text-destructive font-medium">
+						No se pudo registrar el proveedor
+					</p>
+
+					<p class="text-muted-foreground text-sm">
+						{{ error()?.message || "Ocurrió un error inesperado." }}
+					</p>
+				</div>
+			}
+
+			<hlm-dialog-footer class="mt-5 border-t pt-5">
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					[disabled]="loading()"
+					(click)="onOpenChange(false)"
+				>
+					<ng-icon name="lucideX" />
+					Cancelar
+				</button>
+
+				<button
+					hlmBtn
+					type="submit"
+					class="cursor-pointer"
+					[disabled]="loading()"
+				>
+					<ng-icon name="lucideSave" />
+					@if (loading()) {
+						Guardando...
+					} @else {
+						Registrar proveedor
+					}
+				</button>
+			</hlm-dialog-footer>
+		</form>
+	</hlm-dialog-content>
+</hlm-dialog>

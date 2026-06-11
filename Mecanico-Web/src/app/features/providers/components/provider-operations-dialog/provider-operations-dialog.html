@@ -1,0 +1,149 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Editar operación del proveedor</h3>
+			<p hlmDialogDescription>
+				Actualiza estado, disponibilidad y capacidad operativa.
+			</p>
+		</hlm-dialog-header>
+
+		<form class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+			@if (provider()) {
+				<div class="bg-muted/30 rounded-2xl border p-4">
+					<div class="flex items-center gap-3">
+						<div
+							class="bg-background flex size-10 items-center justify-center rounded-full border"
+						>
+							<ng-icon name="lucideSettings" />
+						</div>
+
+						<div>
+							<p class="font-medium">{{ provider()?.businessName }}</p>
+							<p class="text-muted-foreground text-sm">
+								{{ provider()?.contactEmail }}
+							</p>
+						</div>
+					</div>
+				</div>
+			}
+
+			<div class="grid gap-4 sm:grid-cols-2">
+				<div class="rounded-xl border p-4">
+					<div class="mb-3">
+						<p class="font-medium">Estado</p>
+						<p class="text-muted-foreground text-sm">
+							Define si el proveedor está activo en la plataforma.
+						</p>
+					</div>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+
+						<hlm-switch formControlName="isActive" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<div class="mb-3">
+						<p class="font-medium">Disponibilidad</p>
+						<p class="text-muted-foreground text-sm">
+							Define si puede recibir servicios actualmente.
+						</p>
+					</div>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Disponible</span>
+
+						<hlm-switch formControlName="isAvailable" />
+					</div>
+				</div>
+			</div>
+
+			<div class="grid gap-4 sm:grid-cols-2">
+				<hlm-field>
+					<label hlmLabel for="maxConcurrentServices">
+						Servicios máximos
+					</label>
+
+					<input
+						hlmInput
+						id="maxConcurrentServices"
+						type="number"
+						min="1"
+						formControlName="maxConcurrentServices"
+					/>
+
+					@if (
+						form.controls.maxConcurrentServices.invalid &&
+						form.controls.maxConcurrentServices.touched
+					) {
+						<p class="text-destructive text-sm">Debe ser mayor o igual a 1.</p>
+					}
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="currentActiveServices">
+						Servicios activos actuales
+					</label>
+
+					<input
+						hlmInput
+						id="currentActiveServices"
+						type="number"
+						min="0"
+						formControlName="currentActiveServices"
+					/>
+
+					@if (
+						form.controls.currentActiveServices.invalid &&
+						form.controls.currentActiveServices.touched
+					) {
+						<p class="text-destructive text-sm">Debe ser mayor o igual a 0.</p>
+					}
+				</hlm-field>
+			</div>
+
+			@if (error()) {
+				<div
+					class="border-destructive/30 bg-destructive/5 rounded-xl border p-4"
+				>
+					<p class="text-destructive font-medium">
+						No se pudieron actualizar las operaciones
+					</p>
+
+					<p class="text-muted-foreground text-sm">
+						{{ error()?.message || "Ocurrió un error inesperado." }}
+					</p>
+				</div>
+			}
+
+			<hlm-dialog-footer>
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					[disabled]="loading()"
+					(click)="onOpenChange(false)"
+				>
+					<ng-icon name="lucideX" />
+					Cancelar
+				</button>
+
+				<button
+					hlmBtn
+					type="submit"
+					class="cursor-pointer"
+					[disabled]="loading()"
+				>
+					<ng-icon name="lucideSave" />
+					@if (loading()) {
+						Guardando...
+					} @else {
+						Guardar cambios
+					}
+				</button>
+			</hlm-dialog-footer>
+		</form>
+	</hlm-dialog-content>
+</hlm-dialog>

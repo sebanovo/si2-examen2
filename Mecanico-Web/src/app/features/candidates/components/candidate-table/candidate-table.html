@@ -1,0 +1,136 @@
+<div hlmTableContainer>
+	<table hlmTable>
+		<thead hlmTHead class="bg-gray-200">
+			<tr hlmTr>
+				<th hlmTh>Incidente</th>
+				<th hlmTh>Servicio</th>
+				<th hlmTh>Distancia</th>
+				<th hlmTh>Score</th>
+				<th hlmTh>Prioridad</th>
+				<th hlmTh>Estado</th>
+				<th hlmTh>Publicado</th>
+				<th hlmTh class="text-right">Acciones</th>
+			</tr>
+		</thead>
+
+		<tbody hlmTBody>
+			@for (candidate of candidates(); track candidate.id) {
+				<tr hlmTr>
+					<td hlmTd class="text-foreground font-medium">
+						<div>
+							<p>{{ candidate.incident.title }}</p>
+							<p class="text-muted-foreground text-xs">
+								{{ candidate.incident.addressReference || "Sin referencia" }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>
+						<div class="flex flex-wrap gap-1">
+							@for (code of candidate.matchedServiceCodes; track code) {
+								<span hlmBadge variant="outline">{{ code }}</span>
+							}
+						</div>
+					</td>
+
+					<td hlmTd>{{ candidate.distanceKm }} km</td>
+
+					<td hlmTd>
+						<span hlmBadge variant="secondary">
+							{{ candidate.score }}
+						</span>
+					</td>
+
+					<td hlmTd>
+						@if (
+							candidate.incident.priority === "URGENT" ||
+							candidate.incident.priority === "HIGH"
+						) {
+							<span hlmBadge class="bg-red-100 text-red-700 hover:bg-red-100">
+								{{ candidate.incident.priority }}
+							</span>
+						} @else if (candidate.incident.priority === "MEDIUM") {
+							<span
+								hlmBadge
+								class="bg-orange-100 text-orange-700 hover:bg-orange-100"
+							>
+								{{ candidate.incident.priority }}
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">
+								{{ candidate.incident.priority }}
+							</span>
+						}
+					</td>
+
+					<td hlmTd>
+						@if (candidate.status === "AVAILABLE") {
+							<span hlmBadge class="bg-sky-100 text-sky-700 hover:bg-sky-100">
+								Disponible
+							</span>
+						} @else if (candidate.status === "ACCEPTED") {
+							<span
+								hlmBadge
+								class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+							>
+								Aceptado
+							</span>
+						} @else if (candidate.status === "REJECTED") {
+							<span hlmBadge variant="outline">Rechazado</span>
+						} @else {
+							<span hlmBadge variant="outline">{{ candidate.status }}</span>
+						}
+					</td>
+
+					<td hlmTd>{{ candidate.publishedAt }}</td>
+
+					<td hlmTd class="text-right">
+						<div class="flex items-center justify-end">
+							<button
+								hlmBtn
+								variant="outline"
+								size="icon"
+								[disabled]="isCandidateActing(candidate.id)"
+								[hlmDropdownMenuTrigger]="menu"
+							>
+								<ng-icon name="lucideMoreVertical" />
+							</button>
+
+							<ng-template #menu>
+								<hlm-dropdown-menu class="w-52">
+									<hlm-dropdown-menu-group>
+										<button
+											hlmDropdownMenuItem
+											(click)="onViewCandidate(candidate)"
+										>
+											<ng-icon name="lucideEye" class="text-foreground" />
+											<span>Ver detalle</span>
+										</button>
+
+										<button
+											hlmDropdownMenuItem
+											[disabled]="!canAct(candidate)"
+											(click)="onAcceptCandidate(candidate)"
+										>
+											<ng-icon name="lucideCheck" class="text-foreground" />
+											<span>Aceptar</span>
+										</button>
+
+										<button
+											hlmDropdownMenuItem
+											[disabled]="!canAct(candidate)"
+											(click)="onRejectCandidate(candidate)"
+										>
+											<ng-icon name="lucideX" class="text-foreground" />
+											<span>Rechazar</span>
+										</button>
+									</hlm-dropdown-menu-group>
+								</hlm-dropdown-menu>
+							</ng-template>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

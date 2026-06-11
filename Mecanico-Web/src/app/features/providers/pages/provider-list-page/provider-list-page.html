@@ -1,0 +1,111 @@
+<section class="space-y-6">
+	<section hlmCard>
+		<app-card-header
+			title="Proveedores"
+			description="Gestiona talleres y proveedores registrados en la plataforma"
+			icon="lucideStore"
+			[showAction]="!store.isEmpty()"
+			actionLabel="Nuevo"
+			actionIcon="lucidePlus"
+			(actionClick)="onCreateProvider()"
+		/>
+
+		<div hlmCardContent class="space-y-4">
+			@if (store.loading() && !store.hasLoaded()) {
+				<div class="space-y-4">
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+				</div>
+			} @else if (store.hasError()) {
+				<app-table-error
+					variant="destructive"
+					icon="lucideAlertCircle"
+					[description]="
+						store.error()?.message || 'Ocurrió un error inesperado'
+					"
+					title="No se pudieron cargar los proveedores"
+					[showAction]="true"
+					actionLabel="Reintentar"
+					(actionClick)="onRetry()"
+				/>
+			} @else if (store.isEmpty()) {
+				<app-empty-state
+					title="Sin proveedores"
+					description="Aún no existen proveedores para mostrar."
+					icon="lucideInbox"
+					[showAction]="true"
+					actionLabel="Registrar primer proveedor"
+					actionIcon="lucidePlus"
+					(actionClick)="onCreateProvider()"
+				/>
+			} @else {
+				<app-provider-table
+					[providers]="store.providers()"
+					(viewProvider)="onViewProvider($event)"
+					(editOperations)="onEditOperations($event)"
+				/>
+
+				<div
+					class="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between"
+				>
+					<p class="text-muted-foreground text-sm">
+						{{ store.currentPageLabel() }}
+					</p>
+
+					<div class="flex items-center gap-2">
+						<button
+							hlmBtn
+							variant="outline"
+							size="sm"
+							class="cursor-pointer"
+							[disabled]="!store.canGoPrevious()"
+							(click)="onPreviousPage()"
+						>
+							<ng-icon name="lucideChevronLeft" />
+							Anterior
+						</button>
+
+						<button
+							hlmBtn
+							variant="outline"
+							size="sm"
+							class="cursor-pointer"
+							[disabled]="!store.canGoNext()"
+							(click)="onNextPage()"
+						>
+							Siguiente
+							<ng-icon name="lucideChevronRight" />
+						</button>
+					</div>
+				</div>
+
+				<app-provider-detail-dialog
+					[open]="viewDialogOpen()"
+					[provider]="store.selectedProvider()"
+					[loading]="store.selectedProviderLoading()"
+					[error]="store.selectedProviderError()"
+					(openChange)="onViewDialogOpenChange($event)"
+				/>
+
+				<app-provider-operations-dialog
+					[open]="operationsDialogOpen()"
+					[provider]="selectedProviderForOperations()"
+					[loading]="store.updatingProviderOperations()"
+					[error]="store.updatingProviderOperationsError()"
+					(openChange)="onOperationsDialogOpenChange($event)"
+					(saveOperations)="onSaveOperations($event)"
+				/>
+
+				<app-provider-onboarding-dialog
+					[open]="onboardingDialogOpen()"
+					[loading]="store.onboardingProvider()"
+					[error]="store.onboardingProviderError()"
+					(openChange)="onOnboardingDialogOpenChange($event)"
+					(onboardProvider)="onOnboardProvider($event)"
+				/>
+			}
+		</div>
+	</section>
+</section>

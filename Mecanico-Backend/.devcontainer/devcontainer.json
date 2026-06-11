@@ -1,0 +1,38 @@
+{
+  "name": "mechanic-api-dev",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/mechanic-api",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/mechanic-api,type=bind,consistency=cached"
+  ],
+  "forwardPorts": [8000],
+  "runArgs": [
+    "--network=mechanic-system_mechanic-net",
+    "--env-file=../.env.sample",
+    "--hostname=serv-mech-api"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "charliermarsh.ruff",
+        "ms-python.black-formatter",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.analysis.typeCheckingMode": "basic",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        }
+      }
+    }
+  },
+  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt",
+  "remoteUser": "root"
+}

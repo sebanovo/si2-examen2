@@ -1,0 +1,44 @@
+<section class="space-y-6">
+	@if (store.loading()) {
+		<section class="space-y-4">
+			<hlm-skeleton class="h-44 w-full rounded-2xl" />
+			<hlm-skeleton class="h-80 w-full rounded-2xl" />
+		</section>
+	} @else if (store.hasError()) {
+		<app-table-error
+			variant="destructive"
+			icon="lucideX"
+			title="No se pudo cargar tu empresa"
+			[description]="store.error()?.message || 'Ocurrió un error inesperado.'"
+			[showAction]="true"
+			actionLabel="Reintentar"
+			(actionClick)="onRetry()"
+		/>
+	} @else if (store.miEmpresa()) {
+		@let empresa = store.miEmpresa();
+
+		<app-mi-empresa-hero
+			[empresa]="empresa"
+			[editMode]="editMode()"
+			(editClick)="onEnableEdit()"
+		/>
+
+		<section class="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+			<app-mi-empresa-form-card
+				[empresa]="empresa"
+				[form]="form"
+				[editMode]="editMode()"
+				[loading]="store.updating()"
+				[error]="store.updateError()"
+				(cancelClick)="onCancelEdit()"
+				(saveClick)="onSubmit()"
+			/>
+
+			<aside class="space-y-6">
+				<app-mi-empresa-metrics-card [empresa]="empresa" />
+				<app-mi-empresa-owner-card [empresa]="empresa" />
+				<app-mi-empresa-activity-card [empresa]="empresa" />
+			</aside>
+		</section>
+	}
+</section>

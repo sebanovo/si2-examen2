@@ -1,0 +1,30 @@
+@let currentUser = user();
+
+@if (currentUser) {
+	<section hlmCard>
+		<div hlmCardHeader>
+			<h2 hlmCardTitle>Actividad de cuenta</h2>
+			<p hlmCardDescription>Fechas principales del registro.</p>
+		</div>
+
+		<div hlmCardContent class="space-y-4">
+			<div class="flex items-start gap-3 rounded-2xl border p-4">
+				<ng-icon name="lucideCalendar" class="text-muted-foreground mt-1" />
+
+				<div>
+					<p class="text-muted-foreground text-sm">Creado</p>
+					<p class="font-medium">{{ currentUser.createdAt }}</p>
+				</div>
+			</div>
+
+			<div class="flex items-start gap-3 rounded-2xl border p-4">
+				<ng-icon name="lucideCalendar" class="text-muted-foreground mt-1" />
+
+				<div>
+					<p class="text-muted-foreground text-sm">Última modificación</p>
+					<p class="font-medium">{{ currentUser.updatedAt }}</p>
+				</div>
+			</div>
+		</div>
+	</section>
+}

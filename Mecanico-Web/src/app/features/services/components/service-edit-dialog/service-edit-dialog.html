@@ -1,0 +1,176 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-2xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Editar servicio configurado</h3>
+			<p hlmDialogDescription>
+				Actualiza precios, duración, disponibilidad y estado del servicio.
+			</p>
+		</hlm-dialog-header>
+
+		<form class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+			@if (providerService()) {
+				<section class="bg-muted/30 rounded-2xl border p-4">
+					<div class="flex items-center gap-3">
+						<div
+							class="bg-background flex size-10 items-center justify-center rounded-full border"
+						>
+							<ng-icon name="lucideSettings2" />
+						</div>
+
+						<div>
+							<p class="font-medium">{{ providerService()?.effectiveTitle }}</p>
+							<p class="text-muted-foreground text-sm">
+								{{ providerService()?.serviceCode }} —
+								{{ providerService()?.serviceCategory }}
+							</p>
+						</div>
+					</div>
+				</section>
+			}
+
+			<div class="grid gap-4 sm:grid-cols-2">
+				<hlm-field>
+					<label hlmLabel for="editCustomTitle">Título personalizado</label>
+					<input
+						hlmInput
+						id="editCustomTitle"
+						type="text"
+						formControlName="customTitle"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="editEstimatedDurationMinutes">
+						Duración estimada
+					</label>
+					<input
+						hlmInput
+						id="editEstimatedDurationMinutes"
+						type="number"
+						min="1"
+						formControlName="estimatedDurationMinutes"
+					/>
+				</hlm-field>
+
+				<hlm-field class="sm:col-span-2">
+					<label hlmLabel for="editCustomDescription">
+						Descripción personalizada
+					</label>
+					<input
+						hlmInput
+						id="editCustomDescription"
+						type="text"
+						formControlName="customDescription"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="editPriceEstimateMin">Precio mínimo</label>
+					<input
+						hlmInput
+						id="editPriceEstimateMin"
+						type="number"
+						min="0"
+						formControlName="priceEstimateMin"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="editPriceEstimateMax">Precio máximo</label>
+					<input
+						hlmInput
+						id="editPriceEstimateMax"
+						type="number"
+						min="0"
+						formControlName="priceEstimateMax"
+					/>
+
+					@if (form.controls.priceEstimateMax.hasError("minPrice")) {
+						<p class="text-destructive text-sm">
+							El precio máximo no puede ser menor al mínimo.
+						</p>
+					}
+				</hlm-field>
+			</div>
+
+			<div class="grid gap-4 sm:grid-cols-3">
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Servicio móvil</p>
+					<p class="text-muted-foreground mb-3 text-sm">
+						Disponible fuera del taller.
+					</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Habilitado</span>
+						<hlm-switch formControlName="isMobileServiceEnabled" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Emergencia</p>
+					<p class="text-muted-foreground mb-3 text-sm">
+						Disponible para atención urgente.
+					</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Habilitado</span>
+						<hlm-switch formControlName="isEmergencyServiceEnabled" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Estado</p>
+					<p class="text-muted-foreground mb-3 text-sm">
+						Servicio visible para operar.
+					</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+						<hlm-switch formControlName="isActive" />
+					</div>
+				</div>
+			</div>
+
+			@if (error()) {
+				<div
+					class="border-destructive/30 bg-destructive/5 rounded-xl border p-4"
+				>
+					<p class="text-destructive font-medium">
+						No se pudo actualizar el servicio
+					</p>
+					<p class="text-muted-foreground text-sm">
+						{{ error()?.message || "Ocurrió un error inesperado." }}
+					</p>
+				</div>
+			}
+
+			<hlm-dialog-footer>
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					[disabled]="loading()"
+					(click)="onOpenChange(false)"
+				>
+					<ng-icon name="lucideX" />
+					Cancelar
+				</button>
+
+				<button
+					hlmBtn
+					type="submit"
+					class="cursor-pointer"
+					[disabled]="loading()"
+				>
+					<ng-icon name="lucideSave" />
+					@if (loading()) {
+						Guardando...
+					} @else {
+						Guardar cambios
+					}
+				</button>
+			</hlm-dialog-footer>
+		</form>
+	</hlm-dialog-content>
+</hlm-dialog>

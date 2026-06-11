@@ -1,0 +1,96 @@
+<section class="space-y-6">
+	<section hlmCard>
+		<app-card-header
+			title="Usuarios"
+			description="Gestiona los usuarios registrados en el sistema"
+			icon="lucideUsers"
+			[showAction]="false"
+			actionLabel="Nuevo"
+			actionIcon="lucidePlus"
+			(actionClick)="onCreateUser()"
+		/>
+
+		<div hlmCardContent class="space-y-4">
+			@if (store.loading() && !store.hasLoaded()) {
+				<div class="space-y-4">
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+				</div>
+			} @else if (store.hasError()) {
+				<app-table-error
+					variant="destructive"
+					icon="lucideAlertCircle"
+					[description]="
+						store.error()?.message || 'Ocurrió un error inesperado'
+					"
+					title="No se pudieron cargar los usuarios"
+					[showAction]="true"
+					actionLabel="Reintentar"
+					(actionClick)="onRetry()"
+				/>
+			} @else if (store.isEmpty()) {
+				<app-empty-state
+					title="Sin usuarios"
+					description="Aún no existen usuarios para mostrar."
+					icon="lucideInbox"
+					[showAction]="true"
+					actionLabel="Crear primer usuario"
+					actionIcon="lucidePlus"
+					(actionClick)="onCreateUser()"
+				/>
+			} @else {
+				<app-user-table
+					[users]="store.users()"
+					(viewUser)="onViewUser($event)"
+					(editUser)="onEditUser($event)"
+					(manageRoles)="onManageRoles($event)"
+				/>
+
+				<div
+					class="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between"
+				>
+					<p class="text-muted-foreground text-sm">
+						{{ store.currentPageLabel() }}
+					</p>
+
+					<div class="flex items-center gap-2">
+						<button
+							hlmBtn
+							variant="outline"
+							size="sm"
+							class="cursor-pointer"
+							[disabled]="!store.canGoPrevious()"
+							(click)="onPreviousPage()"
+						>
+							<ng-icon name="lucideChevronLeft" />
+							Anterior
+						</button>
+
+						<button
+							hlmBtn
+							variant="outline"
+							size="sm"
+							class="cursor-pointer"
+							[disabled]="!store.canGoNext()"
+							(click)="onNextPage()"
+						>
+							Siguiente
+							<ng-icon name="lucideChevronRight" />
+						</button>
+					</div>
+				</div>
+
+				<app-user-detail-dialog
+					[open]="viewDialogOpen()"
+					[user]="store.selectedUser()"
+					[loading]="store.selectedUserLoading()"
+					[error]="store.selectedUserError()"
+					(openChange)="onViewDialogOpenChange($event)"
+					(editUser)="onEditUser($event)"
+				/>
+			}
+		</div>
+	</section>
+</section>

@@ -1,0 +1,83 @@
+<div hlmTableContainer>
+	<table hlmTable>
+		<thead hlmTHead class="bg-gray-200">
+			<tr hlmTr>
+				<th hlmTh>Nombre</th>
+				<th hlmTh>Teléfono</th>
+				<th hlmTh>Especialidad</th>
+				<th hlmTh>Ubicación</th>
+				<th hlmTh>Estado</th>
+				<th hlmTh>Disponible</th>
+				<th hlmTh>Actualizado</th>
+				<th hlmTh class="text-right">Acciones</th>
+			</tr>
+		</thead>
+
+		<tbody hlmTBody>
+			@for (technician of technicians(); track technician.id) {
+				<tr hlmTr>
+					<td hlmTd class="text-foreground font-medium">
+						{{ technician.fullName }}
+					</td>
+
+					<td hlmTd>
+						{{ technician.phoneNumber || "Sin teléfono" }}
+					</td>
+
+					<td hlmTd>
+						{{ technician.specialty }}
+					</td>
+
+					<td hlmTd>
+						<div class="flex items-center gap-2">
+							<ng-icon name="lucideMapPin" class="text-muted-foreground" />
+							<span class="text-sm">
+								{{ technician.currentLatitude }},
+								{{ technician.currentLongitude }}
+							</span>
+						</div>
+					</td>
+
+					<td hlmTd>
+						@if (technician.isActive) {
+							<span
+								hlmBadge
+								class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+							>
+								Activo
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">Inactivo</span>
+						}
+					</td>
+
+					<td hlmTd>
+						@if (technician.isAvailable) {
+							<span hlmBadge class="bg-sky-100 text-sky-700 hover:bg-sky-100">
+								Disponible
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">No disponible</span>
+						}
+					</td>
+
+					<td hlmTd>
+						{{ technician.updatedAt }}
+					</td>
+
+					<td hlmTd class="text-right">
+						<button
+							hlmBtn
+							variant="outline"
+							size="sm"
+							class="cursor-pointer"
+							(click)="onEditTechnician(technician)"
+						>
+							<ng-icon name="lucidePencil" class="text-foreground" />
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

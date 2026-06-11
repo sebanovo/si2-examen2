@@ -1,0 +1,84 @@
+<section class="space-y-6">
+	<section hlmCard>
+		<app-card-header
+			title="Catálogo de servicios"
+			description="Gestiona los servicios base disponibles en la plataforma"
+			icon="lucideSettings"
+			[showAction]="!store.isEmpty()"
+			actionLabel="Nuevo"
+			actionIcon="lucidePlus"
+			(actionClick)="onOpenCreateDialog()"
+		/>
+
+		<div hlmCardContent class="space-y-4">
+			@if (store.loading() && !store.hasLoaded()) {
+				<div class="space-y-4">
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+				</div>
+			} @else if (store.hasError()) {
+				<app-table-error
+					variant="destructive"
+					icon="lucideAlertCircle"
+					[description]="
+						store.error()?.message || 'Ocurrió un error inesperado'
+					"
+					title="No se pudieron cargar los servicios"
+					[showAction]="true"
+					actionLabel="Reintentar"
+					(actionClick)="onRetry()"
+				/>
+			} @else if (store.isEmpty()) {
+				<app-empty-state
+					title="Sin servicios"
+					description="Aún no existen servicios en el catálogo."
+					icon="lucideInbox"
+					[showAction]="true"
+					actionLabel="Crear primer servicio"
+					actionIcon="lucidePlus"
+					(actionClick)="onOpenCreateDialog()"
+				/>
+			} @else {
+				<app-catalog-table
+					[catalogServices]="store.catalogServices()"
+					(viewCatalogService)="onViewCatalogService($event)"
+					(editCatalogService)="onOpenEditDialog($event)"
+				/>
+
+				<div class="border-t pt-4">
+					<p class="text-muted-foreground text-sm">
+						Total servicios: {{ store.count() }}
+					</p>
+				</div>
+			}
+		</div>
+	</section>
+
+	<app-catalog-create-dialog
+		[open]="createDialogOpen()"
+		[loading]="store.creatingCatalogService()"
+		[error]="store.creatingCatalogServiceError()"
+		(openChange)="onCreateDialogOpenChange($event)"
+		(createCatalogService)="onCreateCatalogService($event)"
+	/>
+
+	<app-catalog-edit-dialog
+		[open]="editDialogOpen()"
+		[catalogService]="selectedCatalogServiceForEdit()"
+		[loading]="store.updatingCatalogService()"
+		[error]="store.updatingCatalogServiceError()"
+		(openChange)="onEditDialogOpenChange($event)"
+		(updateCatalogService)="onUpdateCatalogService($event)"
+	/>
+
+	<app-catalog-detail-dialog
+		[open]="detailDialogOpen()"
+		[catalogService]="store.selectedCatalogService()"
+		[loading]="store.selectedCatalogServiceLoading()"
+		[error]="store.selectedCatalogServiceError()"
+		(openChange)="onDetailDialogOpenChange($event)"
+		(editCatalogService)="onEditFromDetail($event)"
+	/>
+</section>

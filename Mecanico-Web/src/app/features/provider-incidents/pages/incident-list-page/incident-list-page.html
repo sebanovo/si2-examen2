@@ -1,0 +1,59 @@
+<section class="space-y-6">
+	<section hlmCard>
+		<app-card-header
+			title="Incidentes"
+			description="Consulta los incidentes aceptados en tu empresa"
+			icon="lucideSiren"
+			[showAction]="false"
+		/>
+
+		<div hlmCardContent class="space-y-4">
+			@if (store.loading() && !store.hasLoaded()) {
+				<div class="space-y-4">
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+				</div>
+			} @else if (store.hasError()) {
+				<app-table-error
+					variant="destructive"
+					icon="lucideAlertCircle"
+					[description]="
+						store.error()?.message || 'Ocurrió un error inesperado'
+					"
+					title="No se pudieron cargar los incidentes"
+					[showAction]="true"
+					actionLabel="Reintentar"
+					(actionClick)="onRetry()"
+				/>
+			} @else if (store.isEmpty()) {
+				<app-empty-state
+					title="Sin incidentes"
+					description="Aún no existen incidentes aceptados en tu empresa."
+					icon="lucideInbox"
+					[showAction]="false"
+				/>
+			} @else {
+				<app-incident-table
+					[incidents]="store.incidents()"
+					(viewIncident)="onViewIncident($event)"
+				/>
+
+				<div class="border-t pt-4">
+					<p class="text-muted-foreground text-sm">
+						Total incidentes: {{ store.count() }}
+					</p>
+				</div>
+			}
+		</div>
+	</section>
+
+	<app-incident-detail-dialog
+		[open]="detailDialogOpen()"
+		[incident]="store.selectedIncident()"
+		[loading]="store.selectedIncidentLoading()"
+		[error]="store.selectedIncidentError()"
+		(openChange)="onDetailDialogOpenChange($event)"
+	/>
+</section>

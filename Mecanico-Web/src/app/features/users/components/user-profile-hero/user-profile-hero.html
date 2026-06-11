@@ -1,0 +1,71 @@
+@let currentUser = user();
+
+@if (currentUser) {
+	<section
+		class="from-background via-muted/40 to-background relative overflow-hidden rounded-3xl border bg-gradient-to-br p-6 shadow-sm"
+	>
+		<div
+			class="bg-primary/10 absolute top-0 right-0 h-40 w-40 rounded-full blur-3xl"
+		></div>
+
+		<div
+			class="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+		>
+			<div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+				<div
+					class="bg-background flex size-24 items-center justify-center rounded-3xl border shadow-sm"
+				>
+					<ng-icon name="lucideUser" class="text-muted-foreground size-10" />
+					user
+				</div>
+
+				<div class="space-y-2">
+					<div class="flex flex-wrap items-center gap-2">
+						<h1 class="text-3xl font-bold tracking-tight">
+							{{ currentUser.fullName }}
+						</h1>
+
+						@if (currentUser.isActive) {
+							<span
+								hlmBadge
+								class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+							>
+								<ng-icon name="lucideCheck" class="mr-1 size-3" />
+								Activo
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">Inactivo</span>
+						}
+					</div>
+
+					<p class="text-muted-foreground max-w-2xl">
+						Administra tu información personal. Tu correo, roles y permisos son
+						gestionados por la plataforma y no pueden modificarse desde esta
+						pantalla.
+					</p>
+
+					<div class="flex flex-wrap gap-2">
+						<span hlmBadge variant="secondary">
+							<ng-icon name="lucideMail" class="mr-1 size-3" />
+							{{ currentUser.email }}
+						</span>
+
+						@if (currentUser.isSuperuser) {
+							<span hlmBadge variant="secondary">
+								<ng-icon name="lucideBadgeCheck" class="mr-1 size-3" />
+								Superusuario
+							</span>
+						}
+					</div>
+				</div>
+			</div>
+
+			@if (!editMode()) {
+				<button hlmBtn class="cursor-pointer" (click)="onEditClick()">
+					<ng-icon name="lucidePencil" />
+					Editar perfil
+				</button>
+			}
+		</div>
+	</section>
+}

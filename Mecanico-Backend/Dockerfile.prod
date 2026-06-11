@@ -1,0 +1,44 @@
+FROM python:3.12-slim AS builder
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /build
+
+# build-essential y libpq-dev solo se necesitan para compilar
+# extensiones nativas de algunos paquetes pip
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+# Instala en una carpeta aislada para copiarla limpiamente al runtime
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# ── Runtime stage ─────────────────────────────────────────────
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Solo el runtime de postgres, sin compilador ni headers
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Equivalente al COPY --from=builder del ejemplo de Spring:
+# trae solo los paquetes pip ya instalados, sin build-essential
+COPY --from=builder /install /usr/local
+
+COPY . .
+
+RUN chmod +x /app/scripts/start.sh && chmod +x /app/scripts/start_worker.sh
+
+EXPOSE 8000
+
+CMD ["/app/scripts/start.sh"]

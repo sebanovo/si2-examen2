@@ -1,0 +1,142 @@
+@let currentUser = user();
+
+@if (currentUser) {
+	<section hlmCard>
+		<div hlmCardHeader>
+			<div
+				class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+			>
+				<div>
+					<h2 hlmCardTitle>Información personal</h2>
+					<p hlmCardDescription>
+						Solo puedes editar tu nombre, apellido y número telefónico.
+					</p>
+				</div>
+
+				@if (editMode()) {
+					<span hlmBadge variant="outline">Modo edición</span>
+				}
+			</div>
+		</div>
+
+		<form
+			hlmCardContent
+			class="space-y-6"
+			[formGroup]="form()"
+			(ngSubmit)="onSubmit()"
+		>
+			<div class="grid gap-5 md:grid-cols-2">
+				<hlm-field>
+					<label hlmLabel for="firstName">Nombre</label>
+					<input
+						hlmInput
+						id="firstName"
+						type="text"
+						formControlName="firstName"
+						placeholder="Ej. Platform"
+					/>
+
+					@if (
+						form().get("firstName")?.invalid && form().get("firstName")?.touched
+					) {
+						<p class="text-destructive text-sm">El nombre es obligatorio.</p>
+					}
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="lastName">Apellido</label>
+					<input
+						hlmInput
+						id="lastName"
+						type="text"
+						formControlName="lastName"
+						placeholder="Ej. Admin"
+					/>
+
+					@if (
+						form().get("lastName")?.invalid && form().get("lastName")?.touched
+					) {
+						<p class="text-destructive text-sm">El apellido es obligatorio.</p>
+					}
+				</hlm-field>
+
+				<hlm-field class="md:col-span-2">
+					<label hlmLabel for="phoneNumber">Número telefónico</label>
+					<input
+						hlmInput
+						id="phoneNumber"
+						type="text"
+						formControlName="phoneNumber"
+						placeholder="Ej. 70000001"
+					/>
+				</hlm-field>
+			</div>
+
+			<div class="bg-muted/30 rounded-2xl border p-4">
+				<div class="mb-3 flex items-center gap-2">
+					<ng-icon name="lucideLock" class="text-muted-foreground" />
+					<h3 class="font-medium">Información protegida</h3>
+				</div>
+
+				<div class="grid gap-4 md:grid-cols-2">
+					<div>
+						<p class="text-muted-foreground text-sm">Correo electrónico</p>
+						<p class="font-medium">{{ currentUser.email }}</p>
+					</div>
+
+					<div>
+						<p class="text-muted-foreground text-sm">Identificador</p>
+						<p class="font-mono text-sm break-all">{{ currentUser.id }}</p>
+					</div>
+				</div>
+			</div>
+
+			@if (error()) {
+				<div
+					class="border-destructive/30 bg-destructive/5 rounded-xl border p-4"
+				>
+					<p class="text-destructive font-medium">
+						No se pudo guardar el perfil
+					</p>
+
+					<p class="text-muted-foreground text-sm">
+						{{ error()?.message || "Ocurrió un error inesperado." }}
+					</p>
+				</div>
+			}
+
+			@if (editMode()) {
+				<div
+					class="flex flex-col-reverse gap-3 border-t pt-5 sm:flex-row sm:justify-end"
+				>
+					<button
+						hlmBtn
+						type="button"
+						variant="outline"
+						class="cursor-pointer"
+						[disabled]="loading()"
+						(click)="onCancelClick()"
+					>
+						<ng-icon name="lucideRotateCcw" />
+						Cancelar
+					</button>
+
+					<button
+						hlmBtn
+						type="submit"
+						class="cursor-pointer"
+						[disabled]="loading()"
+					>
+						<ng-icon name="lucideSave" />
+
+						@if (loading()) {
+							Guardando...
+						} @else {
+							Guardar cambios
+						}
+					</button>
+				</div>
+			}
+		</form>
+	</section>
+}

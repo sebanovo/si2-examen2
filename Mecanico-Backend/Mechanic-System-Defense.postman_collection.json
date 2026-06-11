@@ -1,0 +1,939 @@
+{
+  "info": {
+    "_postman_id": "mechanic-system-defense-collection",
+    "name": "Mechanic System - Defense Flow",
+    "description": "Colección de pruebas para defensa del backend FastAPI de emergencias vehiculares.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Response is JSON', function () {",
+          "  pm.response.to.be.json;",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "01 System",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/system/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('API health OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Readiness",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/system/readiness"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('API readiness OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/system/info"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Auth",
+      "item": [
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Admin login OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.access_token).to.be.a('string');",
+                  "});",
+                  "pm.environment.set('admin_token', json.data.access_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{client_email}}\",\n  \"password\": \"{{client_password}}\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Client login OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.access_token).to.be.a('string');",
+                  "});",
+                  "pm.environment.set('client_token', json.data.access_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Provider",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{provider_email}}\",\n  \"password\": \"{{provider_password}}\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Provider login OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.access_token).to.be.a('string');",
+                  "});",
+                  "pm.environment.set('provider_token', json.data.access_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Technician",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{technician_email}}\",\n  \"password\": \"{{technician_password}}\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Technician login OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.access_token).to.be.a('string');",
+                  "});",
+                  "pm.environment.set('technician_token', json.data.access_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me - Client",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Client Flow",
+      "item": [
+        {
+          "name": "List My Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/vehicles"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Vehicles loaded', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "if (json.data && json.data.length > 0) {",
+                  "  pm.environment.set('vehicle_id', json.data[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List My Incidents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/incidents/me"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Incidents loaded', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "const accident = json.data.find(item => item.title && item.title.includes('INC_ACCIDENT_001'));",
+                  "const overheating = json.data.find(item => item.title && item.title.includes('INC_OVERHEATING_001'));",
+                  "const selected = accident || overheating || json.data[0];",
+                  "if (selected) {",
+                  "  pm.environment.set('incident_id', selected.id);",
+                  "  pm.environment.set('provider_incident_id', selected.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get My Incident",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/incidents/me/{{incident_id}}"
+          }
+        },
+        {
+          "name": "Client Live Tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/tracking/client/incidents/{{incident_id}}/live"
+          }
+        },
+        {
+          "name": "Client Tracking History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/tracking/client/incidents/{{incident_id}}/history"
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Platform",
+      "item": [
+        {
+          "name": "Platform Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/system/platform/metrics"
+          }
+        },
+        {
+          "name": "Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/audit/logs?limit=20&offset=0"
+          }
+        },
+        {
+          "name": "Metric Snapshots",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/audit/metric-snapshots?limit=20&offset=0"
+          }
+        },
+        {
+          "name": "Assignment Candidates for Incident",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/assignment/platform/incidents/{{incident_id}}/candidates"
+          }
+        },
+        {
+          "name": "Notifications Deliveries for Incident",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/notifications/platform/incidents/{{incident_id}}/deliveries"
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Provider Flow",
+      "item": [
+        {
+          "name": "Available Assignment Candidates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{provider_token}}"
+              }
+            ],
+            "url": "{{base_url}}/assignment/provider/me/available"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Provider candidates loaded', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "if (json.data && json.data.length > 0) {",
+                  "  pm.environment.set('candidate_id', json.data[0].id);",
+                  "  if (json.data[0].incident_id) {",
+                  "    pm.environment.set('provider_incident_id', json.data[0].incident_id);",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Active Provider Operations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{provider_token}}"
+              }
+            ],
+            "url": "{{base_url}}/operations/provider/me/active"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Active operations loaded', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "if (json.data && json.data.length > 0) {",
+                  "  const first = json.data[0];",
+                  "  const id = first.incident_id || first.id;",
+                  "  if (id) pm.environment.set('provider_incident_id', id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Provider Operation State",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{provider_token}}"
+              }
+            ],
+            "url": "{{base_url}}/operations/provider/incidents/{{provider_incident_id}}/state"
+          }
+        },
+        {
+          "name": "Provider Tracking Live",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{provider_token}}"
+              }
+            ],
+            "url": "{{base_url}}/tracking/provider/incidents/{{provider_incident_id}}/live"
+          }
+        },
+        {
+          "name": "Provider Billing",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{provider_token}}"
+              }
+            ],
+            "url": "{{base_url}}/billing/provider/incidents/{{provider_incident_id}}"
+          }
+        },
+        {
+          "name": "Provider Finalize Pricing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{provider_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"final_price_amount\": 350,\n  \"payment_method\": \"QR\",\n  \"mark_as_paid\": false,\n  \"payment_reference\": null,\n  \"note\": \"Precio final definido desde Postman para defensa.\"\n}"
+            },
+            "url": "{{base_url}}/billing/provider/incidents/{{provider_incident_id}}/finalize"
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Technician Mobile Flow",
+      "item": [
+        {
+          "name": "Technician Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{technician_token}}"
+              }
+            ],
+            "url": "{{base_url}}/technician/me"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Technician profile loaded', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "if (json.data && json.data.id) {",
+                  "  pm.environment.set('technician_id', json.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Technician Incidents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{technician_token}}"
+              }
+            ],
+            "url": "{{base_url}}/technician/me/incidents?active_only=false"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Technician incidents loaded', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "if (json.data && json.data.length > 0) {",
+                  "  pm.environment.set('technician_incident_id', json.data[0].id);",
+                  "  pm.environment.set('incident_id', json.data[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Technician Report Location",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{technician_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": -17.8152,\n  \"longitude\": -63.1997,\n  \"accuracy_meters\": 8\n}"
+            },
+            "url": "{{base_url}}/technician/me/incidents/{{technician_incident_id}}/location"
+          }
+        },
+        {
+          "name": "Technician En Route",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{technician_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Técnico en camino desde Postman.\"\n}"
+            },
+            "url": "{{base_url}}/technician/me/incidents/{{technician_incident_id}}/en-route"
+          }
+        },
+        {
+          "name": "Technician Arrive",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{technician_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Técnico llegó al punto del incidente.\"\n}"
+            },
+            "url": "{{base_url}}/technician/me/incidents/{{technician_incident_id}}/arrive"
+          }
+        },
+        {
+          "name": "Technician Start",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{technician_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Se inicia revisión desde app móvil.\"\n}"
+            },
+            "url": "{{base_url}}/technician/me/incidents/{{technician_incident_id}}/start"
+          }
+        },
+        {
+          "name": "Technician Complete",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{technician_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Servicio completado desde Postman.\",\n  \"completion_summary\": \"El técnico completó la atención del incidente y dejó el caso listo para facturación.\"\n}"
+            },
+            "url": "{{base_url}}/technician/me/incidents/{{technician_incident_id}}/complete"
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Subscriptions",
+      "item": [
+        {
+          "name": "My Client Subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/subscriptions/client/me/subscriptions"
+          }
+        },
+        {
+          "name": "Coverage Preview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/subscriptions/client/incidents/{{incident_id}}/coverage-preview"
+          }
+        },
+        {
+          "name": "Apply Coverage",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/subscriptions/client/incidents/{{incident_id}}/apply-coverage"
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Billing and Mock Payment",
+      "item": [
+        {
+          "name": "Client Billing",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/billing/client/incidents/{{incident_id}}"
+          }
+        },
+        {
+          "name": "Create Mock Checkout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_method\": \"QR\",\n  \"return_url\": \"http://localhost:4200/payment/success\"\n}"
+            },
+            "url": "{{base_url}}/billing/client/incidents/{{incident_id}}/checkout"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Mock checkout created', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "if (json.data && json.data.checkout_reference) {",
+                  "  pm.environment.set('checkout_reference', json.data.checkout_reference);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Simulate Payment Success",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_reference\": \"PAGO-DEMO-POSTMAN-001\"\n}"
+            },
+            "url": "{{base_url}}/billing/client/incidents/{{incident_id}}/simulate-success"
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Ratings",
+      "item": [
+        {
+          "name": "Create or Update Client Rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating_score\": 5,\n  \"punctuality_score\": 5,\n  \"service_quality_score\": 5,\n  \"communication_score\": 4,\n  \"comment\": \"El taller respondió rápido y resolvió el problema.\",\n  \"would_recommend\": true\n}"
+            },
+            "url": "{{base_url}}/ratings/client/incidents/{{incident_id}}"
+          }
+        },
+        {
+          "name": "Get Client Rating",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/ratings/client/incidents/{{incident_id}}"
+          }
+        },
+        {
+          "name": "Provider Rating Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{provider_token}}"
+              }
+            ],
+            "url": "{{base_url}}/ratings/provider/me/stats"
+          }
+        },
+        {
+          "name": "Platform Ratings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/ratings/platform?limit=20&offset=0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Notifications",
+      "item": [
+        {
+          "name": "Register My Device Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_token\": \"postman-demo-device-token-client\",\n  \"device_platform\": \"ANDROID\",\n  \"device_label\": \"Postman Client Device\",\n  \"app_role\": \"CLIENT\"\n}"
+            },
+            "url": "{{base_url}}/notifications/me/devices/register"
+          }
+        },
+        {
+          "name": "List My Device Tokens",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": "{{base_url}}/notifications/me/devices"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+<section class="space-y-6">
+	<section hlmCard>
+		<app-card-header
+			title="Mis servicios"
+			description="Configura los servicios que ofrece tu empresa"
+			icon="lucideSettings"
+			[showAction]="!store.providerServicesIsEmpty()"
+			actionLabel="Nuevo"
+			actionIcon="lucidePlus"
+			(actionClick)="onOpenCreateDialog()"
+		/>
+
+		<div hlmCardContent class="space-y-4">
+			@if (
+				(store.providerServicesLoading() &&
+					!store.providerServicesHasLoaded()) ||
+				(store.catalogLoading() && !store.catalogHasLoaded())
+			) {
+				<div class="space-y-4">
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+					<hlm-skeleton class="h-10 w-full rounded-md" />
+				</div>
+			} @else if (store.hasProviderServicesError() || store.hasCatalogError()) {
+				<app-table-error
+					variant="destructive"
+					icon="lucideAlertCircle"
+					[description]="
+						store.providerServicesError()?.message ||
+						store.catalogError()?.message ||
+						'Ocurrió un error inesperado'
+					"
+					title="No se pudieron cargar los servicios"
+					[showAction]="true"
+					actionLabel="Reintentar"
+					(actionClick)="onRetry()"
+				/>
+			} @else if (store.providerServicesIsEmpty()) {
+				<app-empty-state
+					title="Sin servicios configurados"
+					description="Aún no configuraste servicios para tu empresa."
+					icon="lucideInbox"
+					[showAction]="store.availableCatalogOptions().length > 0"
+					actionLabel="Configurar primer servicio"
+					actionIcon="lucidePlus"
+					(actionClick)="onOpenCreateDialog()"
+				/>
+
+				@if (store.availableCatalogOptions().length === 0) {
+					<div class="bg-muted/30 rounded-xl border p-4">
+						<p class="text-muted-foreground text-sm">
+							No hay servicios disponibles para configurar o todos los servicios
+							del catálogo ya están configurados.
+						</p>
+					</div>
+				}
+			} @else {
+				<app-service-table
+					[services]="store.providerServices()"
+					(editService)="onOpenEditDialog($event)"
+				/>
+
+				<div
+					class="flex flex-col gap-2 border-t pt-4 sm:flex-row sm:items-center sm:justify-between"
+				>
+					<p class="text-muted-foreground text-sm">
+						Total servicios configurados: {{ store.providerServicesCount() }}
+					</p>
+
+					@if (store.availableCatalogOptions().length === 0) {
+						<p class="text-muted-foreground text-sm">
+							Todos los servicios del catálogo ya fueron configurados.
+						</p>
+					}
+				</div>
+			}
+		</div>
+	</section>
+
+	<app-service-create-dialog
+		[open]="createDialogOpen()"
+		[catalogOptions]="store.availableCatalogOptions()"
+		[loading]="store.creatingProviderService()"
+		[error]="store.creatingProviderServiceError()"
+		(openChange)="onCreateDialogOpenChange($event)"
+		(createService)="onCreateService($event)"
+	/>
+
+	<app-service-edit-dialog
+		[open]="editDialogOpen()"
+		[providerService]="selectedServiceForEdit()"
+		[loading]="store.updatingProviderService()"
+		[error]="store.updatingProviderServiceError()"
+		(openChange)="onEditDialogOpenChange($event)"
+		(updateService)="onUpdateService($event)"
+	/>
+</section>

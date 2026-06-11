@@ -1,0 +1,197 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+	<hlm-field-group>
+		<!-- Header -->
+		<div class="flex flex-col items-center gap-1 text-center">
+			<h1 class="text-2xl font-bold">Crear cuenta</h1>
+			<p class="text-muted-foreground text-sm">
+				Elige el tipo de cuenta e ingresa tus datos
+			</p>
+		</div>
+
+		<!-- Error -->
+		@if (errorMessage()) {
+			<div
+				class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600"
+			>
+				{{ errorMessage() }}
+			</div>
+		}
+
+		<!-- Tipo de cuenta -->
+		<hlm-select [formControl]="form.controls.accountType">
+			<hlm-field>
+				<label hlmFieldLabel for="tipo">Tipo de cuenta</label>
+				<hlm-select-trigger class="w-full" buttonId="tipo">
+					<hlm-select-value placeholder="Selecciona un tipo de cuenta" />
+				</hlm-select-trigger>
+
+				<hlm-select-content *hlmSelectPortal>
+					<hlm-select-group>
+						<hlm-select-label>Tipo de cuentas</hlm-select-label>
+					</hlm-select-group>
+
+					<hlm-select-item value="Standard">Standard</hlm-select-item>
+					<hlm-select-item value="Empresa">Empresa</hlm-select-item>
+					<hlm-select-item value="Independiente">Independiente</hlm-select-item>
+				</hlm-select-content>
+			</hlm-field>
+		</hlm-select>
+
+		<!-- Datos personales -->
+		<app-email-input
+			[control]="form.controls.email"
+			inputId="email"
+			label="Correo electrónico"
+			placeholder="loki@gmail.com"
+			icon="lucideMail"
+		/>
+
+		<!-- Seguridad -->
+		<app-password-input
+			[control]="form.controls.password"
+			inputId="password"
+			label="Contraseña"
+		/>
+
+		<div class="grid gap-4 md:grid-cols-2">
+			<app-text-input
+				[control]="form.controls.firstName"
+				inputId="firstName"
+				label="Nombre"
+				placeholder="Loki"
+				icon="lucideUser"
+			/>
+
+			<app-text-input
+				[control]="form.controls.lastName"
+				inputId="lastName"
+				label="Apellido"
+				placeholder="Odin"
+				icon="lucideUser"
+			/>
+		</div>
+
+		<app-number-input
+			[control]="form.controls.phoneNumber"
+			inputId="phoneNumber"
+			label="Teléfono"
+			placeholder="+591 71234567"
+			icon="lucidePhone"
+		/>
+
+		<!-- Submit -->
+		<hlm-field>
+			<button hlmBtn type="submit" [disabled]="form.invalid || isSubmitting()">
+				@if (isSubmitting()) {
+					Creando cuenta...
+				} @else {
+					Crear cuenta
+				}
+			</button>
+		</hlm-field>
+
+		<hlm-field-separator>O</hlm-field-separator>
+
+		<hlm-field>
+			<p hlmFieldDescription class="text-center">
+				¿Ya tienes una cuenta?
+				<a routerLink="/auth/login">Inicia sesión</a>
+			</p>
+		</hlm-field>
+	</hlm-field-group>
+</form>
+
+<!-- <form [formGroup]="form" (ngSubmit)="submit()">
+	<hlm-field-group>
+		<div class="flex flex-col items-center gap-1 text-center">
+			<h1 class="text-2xl font-bold">Crear cuenta</h1>
+			<p class="text-muted-foreground text-sm text-balance">
+				Ingresa tus datos para registrarte.
+			</p>
+		</div>
+
+		@if (errorMessage()) {
+			<div
+				class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600"
+			>
+				{{ errorMessage() }}
+			</div>
+		}
+
+		<app-email-input
+			[control]="form.controls.email"
+			inputId="email"
+			label="Correo electrónico"
+			placeholder="thunder@ejemplo.com"
+			icon="lucideMail"
+		/>
+
+		<div class="grid gap-4 md:grid-cols-2">
+			<app-text-input
+				[control]="form.controls.firstName"
+				inputId="firstName"
+				label="Nombre"
+				placeholder="Thor"
+				icon="lucideUser"
+			/>
+
+			<app-text-input
+				[control]="form.controls.lastName"
+				inputId="lastName"
+				label="Apellido"
+				placeholder="Odin"
+				icon="lucideUser"
+			/>
+		</div>
+
+		<app-number-input
+			[control]="form.controls.phoneNumber"
+			inputId="phoneNumber"
+			label="Teléfono"
+			placeholder="+591 71234567"
+			icon="lucidePhone"
+		/>
+
+		<app-password-input
+			[control]="form.controls.password"
+			inputId="password"
+			label="Contraseña"
+		/>
+
+		<app-password-input
+			[control]="form.controls.confirmPassword"
+			inputId="confirmPassword"
+			label="Confirmar contraseña"
+		/>
+
+		@if (
+			form.errors?.["passwordMismatch"] &&
+			!form.controls.confirmPassword.errors?.["required"]
+		) {
+			<hlm-field>
+				<p class="text-destructive text-sm font-medium">
+					Las contraseñas no coinciden.
+				</p>
+			</hlm-field>
+		}
+
+		<hlm-field>
+			<button hlmBtn type="submit" [disabled]="form.invalid || isSubmitting()">
+				@if (isSubmitting()) {
+					Creando cuenta...
+				} @else {
+					Crear cuenta
+				}
+			</button>
+		</hlm-field>
+
+		<hlm-field-separator>O</hlm-field-separator>
+
+		<hlm-field>
+			<p hlmFieldDescription class="text-center">
+				¿Ya tienes una cuenta?
+				<a routerLink="/auth/login">Inicia sesión</a>
+			</p>
+		</hlm-field>
+	</hlm-field-group>
+</form> -->

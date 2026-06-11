@@ -1,0 +1,9 @@
+<section class="w-full">
+	<app-register-form
+		class="w-full"
+		[isSubmitting]="isSubmitting()"
+		[errorMessage]="errorMessage()"
+		(submitRegister)="onSubmit($event)"
+		(formEdited)="onFormEdited()"
+	/>
+</section>

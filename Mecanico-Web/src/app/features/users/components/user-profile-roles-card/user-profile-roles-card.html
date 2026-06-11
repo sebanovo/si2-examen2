@@ -1,0 +1,35 @@
+@let currentUser = user();
+
+@if (currentUser) {
+	<section hlmCard>
+		<div hlmCardHeader>
+			<h2 hlmCardTitle>Roles y permisos</h2>
+			<p hlmCardDescription>Información asignada por administración.</p>
+		</div>
+
+		<div hlmCardContent class="space-y-4">
+			@if (currentUser.roles.length) {
+				@for (role of currentUser.roles; track role.id) {
+					<div class="rounded-2xl border p-4">
+						<div class="mb-2 flex items-center gap-2">
+							<ng-icon name="lucideShield" class="text-muted-foreground" />
+							<h3 class="font-medium">{{ role.name }}</h3>
+						</div>
+
+						<p class="text-muted-foreground text-sm">
+							{{ role.description || "Sin descripción." }}
+						</p>
+
+						<div class="mt-3">
+							<span hlmBadge variant="outline">
+								{{ role.code }}
+							</span>
+						</div>
+					</div>
+				}
+			} @else {
+				<p class="text-muted-foreground text-sm">No tienes roles asignados.</p>
+			}
+		</div>
+	</section>
+}

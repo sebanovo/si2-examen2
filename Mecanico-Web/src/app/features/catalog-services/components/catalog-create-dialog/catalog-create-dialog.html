@@ -1,0 +1,189 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-2xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Crear servicio de catálogo</h3>
+			<p hlmDialogDescription>
+				Registra un nuevo servicio base disponible para proveedores.
+			</p>
+		</hlm-dialog-header>
+
+		<form class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+			<section class="bg-muted/30 rounded-2xl border p-4">
+				<div class="flex items-center gap-3">
+					<div
+						class="bg-background flex size-10 items-center justify-center rounded-full border"
+					>
+						<ng-icon name="lucideSettings" />
+					</div>
+
+					<div>
+						<p class="font-medium">Información del servicio</p>
+						<p class="text-muted-foreground text-sm">
+							Define código, categoría y capacidades del servicio.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<div class="grid gap-4 sm:grid-cols-2">
+				<hlm-field>
+					<label hlmLabel for="code">Código</label>
+					<input
+						hlmInput
+						id="code"
+						type="text"
+						formControlName="code"
+						placeholder="Ej. PINTURA"
+					/>
+
+					@if (form.controls.code.invalid && form.controls.code.touched) {
+						<p class="text-destructive text-sm">El código es obligatorio.</p>
+					}
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="category">Categoría</label>
+					<input
+						hlmInput
+						id="category"
+						type="text"
+						formControlName="category"
+						placeholder="Ej. CHAPEO"
+					/>
+
+					@if (
+						form.controls.category.invalid && form.controls.category.touched
+					) {
+						<p class="text-destructive text-sm">La categoría es obligatoria.</p>
+					}
+				</hlm-field>
+
+				<hlm-field class="sm:col-span-2">
+					<label hlmLabel for="title">Título</label>
+					<input
+						hlmInput
+						id="title"
+						type="text"
+						formControlName="title"
+						placeholder="Ej. Servicio de pintura"
+					/>
+
+					@if (form.controls.title.invalid && form.controls.title.touched) {
+						<p class="text-destructive text-sm">El título es obligatorio.</p>
+					}
+				</hlm-field>
+
+				<hlm-field class="sm:col-span-2">
+					<label hlmLabel for="description">Descripción</label>
+					<input
+						hlmInput
+						id="description"
+						type="text"
+						formControlName="description"
+						placeholder="Ej. Pintado de autos y motos"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="sortOrder">Orden</label>
+					<input
+						hlmInput
+						id="sortOrder"
+						type="number"
+						min="0"
+						formControlName="sortOrder"
+					/>
+
+					@if (
+						form.controls.sortOrder.invalid && form.controls.sortOrder.touched
+					) {
+						<p class="text-destructive text-sm">
+							El orden debe ser mayor o igual a 0.
+						</p>
+					}
+				</hlm-field>
+			</div>
+
+			<div class="grid gap-4 sm:grid-cols-3">
+				<div class="rounded-xl border p-4">
+					<div class="mb-3">
+						<p class="font-medium">Servicio móvil</p>
+						<p class="text-muted-foreground text-sm">Disponible a domicilio.</p>
+					</div>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+						<hlm-switch formControlName="supportsMobileService" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<div class="mb-3">
+						<p class="font-medium">Emergencia</p>
+						<p class="text-muted-foreground text-sm">
+							Soporta atención urgente.
+						</p>
+					</div>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+						<hlm-switch formControlName="supportsEmergencyService" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<div class="mb-3">
+						<p class="font-medium">Estado</p>
+						<p class="text-muted-foreground text-sm">Visible en catálogo.</p>
+					</div>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+						<hlm-switch formControlName="isActive" />
+					</div>
+				</div>
+			</div>
+
+			@if (error()) {
+				<div
+					class="border-destructive/30 bg-destructive/5 rounded-xl border p-4"
+				>
+					<p class="text-destructive font-medium">
+						No se pudo crear el servicio
+					</p>
+					<p class="text-muted-foreground text-sm">
+						{{ error()?.message || "Ocurrió un error inesperado." }}
+					</p>
+				</div>
+			}
+
+			<hlm-dialog-footer>
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					[disabled]="loading()"
+					(click)="onOpenChange(false)"
+				>
+					<ng-icon name="lucideX" />
+					Cancelar
+				</button>
+
+				<button
+					hlmBtn
+					type="submit"
+					class="cursor-pointer"
+					[disabled]="loading()"
+				>
+					<ng-icon name="lucideSave" />
+					@if (loading()) {
+						Guardando...
+					} @else {
+						Crear servicio
+					}
+				</button>
+			</hlm-dialog-footer>
+		</form>
+	</hlm-dialog-content>
+</hlm-dialog>

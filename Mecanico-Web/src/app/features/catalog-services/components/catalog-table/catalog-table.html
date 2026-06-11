@@ -1,0 +1,112 @@
+<div hlmTableContainer>
+	<table hlmTable>
+		<thead hlmTHead class="bg-gray-200">
+			<tr hlmTr>
+				<th hlmTh>Código</th>
+				<th hlmTh>Categoría</th>
+				<th hlmTh>Servicio</th>
+				<th hlmTh>Soporte</th>
+				<th hlmTh>Estado</th>
+				<th hlmTh>Orden</th>
+				<th hlmTh>Actualizado</th>
+				<th hlmTh class="text-right">Acciones</th>
+			</tr>
+		</thead>
+
+		<tbody hlmTBody>
+			@for (service of catalogServices(); track service.id) {
+				<tr hlmTr>
+					<td hlmTd>
+						<span hlmBadge variant="outline">
+							{{ service.code }}
+						</span>
+					</td>
+
+					<td hlmTd>
+						{{ service.category }}
+					</td>
+
+					<td hlmTd class="text-foreground font-medium">
+						<div>
+							<p>{{ service.title }}</p>
+							<p class="text-muted-foreground text-xs">
+								{{ service.description || "Sin descripción" }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>
+						<div class="flex flex-wrap gap-1">
+							@if (service.supportsMobileService) {
+								<span hlmBadge class="bg-sky-100 text-sky-700 hover:bg-sky-100">
+									Móvil
+								</span>
+							}
+
+							@if (service.supportsEmergencyService) {
+								<span
+									hlmBadge
+									class="bg-orange-100 text-orange-700 hover:bg-orange-100"
+								>
+									Emergencia
+								</span>
+							}
+
+							@if (
+								!service.supportsMobileService &&
+								!service.supportsEmergencyService
+							) {
+								<span hlmBadge variant="outline">Normal</span>
+							}
+						</div>
+					</td>
+
+					<td hlmTd>
+						@if (service.isActive) {
+							<span
+								hlmBadge
+								class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+							>
+								Activo
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">Inactivo</span>
+						}
+					</td>
+
+					<td hlmTd>
+						{{ service.sortOrder }}
+					</td>
+
+					<td hlmTd>
+						{{ service.updatedAt }}
+					</td>
+
+					<td hlmTd class="text-right">
+						<div class="flex items-center justify-end gap-2">
+							<button
+								hlmBtn
+								variant="outline"
+								size="sm"
+								class="cursor-pointer"
+								(click)="onViewCatalogService(service)"
+							>
+								<ng-icon name="lucideEye" class="text-foreground" />
+							</button>
+
+							<button
+								hlmBtn
+								variant="outline"
+								size="sm"
+								class="cursor-pointer"
+								(click)="onEditCatalogService(service)"
+							>
+								<ng-icon name="lucidePencil" class="text-foreground" />
+							</button>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

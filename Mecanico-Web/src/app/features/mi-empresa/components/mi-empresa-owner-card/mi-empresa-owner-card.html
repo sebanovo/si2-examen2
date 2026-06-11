@@ -1,0 +1,52 @@
+@let currentEmpresa = empresa();
+
+@if (currentEmpresa) {
+	<section hlmCard>
+		<div hlmCardHeader>
+			<h2 hlmCardTitle>Administrador</h2>
+			<p hlmCardDescription>Usuario propietario de la empresa.</p>
+		</div>
+
+		<div hlmCardContent class="space-y-4">
+			<div class="flex items-center gap-3 rounded-2xl border p-4">
+				<div
+					class="bg-background flex size-10 items-center justify-center rounded-full border"
+				>
+					<ng-icon name="lucideUser" />
+				</div>
+
+				<div>
+					<p class="font-medium">{{ currentEmpresa.ownerUser.fullName }}</p>
+					@if (currentEmpresa.ownerUser.isActive) {
+						<span
+							hlmBadge
+							class="mt-1 bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+						>
+							Activo
+						</span>
+					} @else {
+						<span hlmBadge variant="outline">Inactivo</span>
+					}
+				</div>
+			</div>
+
+			<div class="rounded-2xl border p-4">
+				<p class="text-muted-foreground flex items-center gap-2 text-sm">
+					<ng-icon name="lucideMail" />
+					Correo
+				</p>
+				<p class="font-medium">{{ currentEmpresa.ownerUser.email }}</p>
+			</div>
+
+			<div class="rounded-2xl border p-4">
+				<p class="text-muted-foreground flex items-center gap-2 text-sm">
+					<ng-icon name="lucidePhone" />
+					Teléfono
+				</p>
+				<p class="font-medium">
+					{{ currentEmpresa.ownerUser.phoneNumber || "Sin teléfono" }}
+				</p>
+			</div>
+		</div>
+	</section>
+}

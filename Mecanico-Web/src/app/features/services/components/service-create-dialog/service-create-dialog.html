@@ -1,0 +1,215 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-2xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Configurar servicio</h3>
+			<p hlmDialogDescription>
+				Selecciona un servicio del catálogo y define su configuración para tu
+				empresa.
+			</p>
+		</hlm-dialog-header>
+
+		<form class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+			<section class="bg-muted/30 rounded-2xl border p-4">
+				<div class="flex items-center gap-3">
+					<div
+						class="bg-background flex size-10 items-center justify-center rounded-full border"
+					>
+						<ng-icon name="lucideSettings" />
+					</div>
+
+					<div>
+						<p class="font-medium">Servicio del catálogo</p>
+						<p class="text-muted-foreground text-sm">
+							El catálogo define las capacidades base del servicio.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<hlm-field>
+				<label hlmLabel for="">Servicio base</label>
+
+				<hlm-select
+					[formControl]="form.controls.serviceCatalogItemId"
+					(valueChange)="onCatalogChange($event)"
+				>
+					<hlm-select-trigger class="w-full">
+						<hlm-select-value
+							placeholder="Selecciona un servicio del catálogo"
+						/>
+					</hlm-select-trigger>
+
+					<hlm-select-content *hlmSelectPortal>
+						@for (item of catalogOptions(); track item.catalogItem.id) {
+							<hlm-select-item [value]="item.catalogItem.id">
+								{{ item.catalogItem.title }} — {{ item.catalogItem.category }}
+							</hlm-select-item>
+						}
+					</hlm-select-content>
+				</hlm-select>
+
+				@if (
+					form.controls.serviceCatalogItemId.invalid &&
+					form.controls.serviceCatalogItemId.touched
+				) {
+					<p class="text-destructive text-sm">Debes seleccionar un servicio.</p>
+				}
+			</hlm-field>
+
+			<div class="grid gap-4 sm:grid-cols-2">
+				<hlm-field>
+					<label hlmLabel for="customTitle">Título personalizado</label>
+					<input
+						hlmInput
+						id="customTitle"
+						type="text"
+						formControlName="customTitle"
+						placeholder="Ej. Servicio de pintura"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="estimatedDurationMinutes">
+						Duración estimada
+					</label>
+					<input
+						hlmInput
+						id="estimatedDurationMinutes"
+						type="number"
+						min="1"
+						formControlName="estimatedDurationMinutes"
+					/>
+
+					@if (
+						form.controls.estimatedDurationMinutes.invalid &&
+						form.controls.estimatedDurationMinutes.touched
+					) {
+						<p class="text-destructive text-sm">
+							Debe ser mayor o igual a 1 minuto.
+						</p>
+					}
+				</hlm-field>
+
+				<hlm-field class="sm:col-span-2">
+					<label hlmLabel for="customDescription"
+						>Descripción personalizada</label
+					>
+					<input
+						hlmInput
+						id="customDescription"
+						type="text"
+						formControlName="customDescription"
+						placeholder="Ej. Pintura duradera con acabado profesional"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="priceEstimateMin">Precio mínimo</label>
+					<input
+						hlmInput
+						id="priceEstimateMin"
+						type="number"
+						min="0"
+						formControlName="priceEstimateMin"
+					/>
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="priceEstimateMax">Precio máximo</label>
+					<input
+						hlmInput
+						id="priceEstimateMax"
+						type="number"
+						min="0"
+						formControlName="priceEstimateMax"
+					/>
+
+					@if (form.controls.priceEstimateMax.hasError("minPrice")) {
+						<p class="text-destructive text-sm">
+							El precio máximo no puede ser menor al mínimo.
+						</p>
+					}
+				</hlm-field>
+			</div>
+
+			<div class="grid gap-4 sm:grid-cols-3">
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Servicio móvil</p>
+					<p class="text-muted-foreground mb-3 text-sm">
+						Disponible fuera del taller.
+					</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Habilitado</span>
+						<hlm-switch formControlName="isMobileServiceEnabled" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Emergencia</p>
+					<p class="text-muted-foreground mb-3 text-sm">
+						Disponible para atención urgente.
+					</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Habilitado</span>
+						<hlm-switch formControlName="isEmergencyServiceEnabled" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Estado</p>
+					<p class="text-muted-foreground mb-3 text-sm">
+						Servicio visible para operar.
+					</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+						<hlm-switch formControlName="isActive" />
+					</div>
+				</div>
+			</div>
+
+			@if (error()) {
+				<div
+					class="border-destructive/30 bg-destructive/5 rounded-xl border p-4"
+				>
+					<p class="text-destructive font-medium">
+						No se pudo configurar el servicio
+					</p>
+					<p class="text-muted-foreground text-sm">
+						{{ error()?.message || "Ocurrió un error inesperado." }}
+					</p>
+				</div>
+			}
+
+			<hlm-dialog-footer>
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					[disabled]="loading()"
+					(click)="onOpenChange(false)"
+				>
+					<ng-icon name="lucideX" />
+					Cancelar
+				</button>
+
+				<button
+					hlmBtn
+					type="submit"
+					class="cursor-pointer"
+					[disabled]="loading()"
+				>
+					<ng-icon name="lucideSave" />
+					@if (loading()) {
+						Guardando...
+					} @else {
+						Configurar servicio
+					}
+				</button>
+			</hlm-dialog-footer>
+		</form>
+	</hlm-dialog-content>
+</hlm-dialog>

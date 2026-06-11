@@ -1,0 +1,94 @@
+<div hlmTableContainer>
+	<table hlmTable>
+		<thead hlmTHead class="bg-gray-200">
+			<tr hlmTr>
+				<th hlmTh>Servicio</th>
+				<th hlmTh>Categoría</th>
+				<th hlmTh>Precio</th>
+				<th hlmTh>Duración</th>
+				<th hlmTh>Móvil</th>
+				<th hlmTh>Emergencia</th>
+				<th hlmTh>Estado</th>
+				<th hlmTh>Actualizado</th>
+			</tr>
+		</thead>
+
+		<tbody hlmTBody>
+			@for (service of providerServices(); track service.id) {
+				<tr hlmTr>
+					<td hlmTd class="text-foreground font-medium">
+						<div>
+							<p>{{ service.effectiveTitle }}</p>
+							<p class="text-muted-foreground text-xs">
+								{{ service.effectiveDescription }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>
+						<div>
+							<span hlmBadge variant="outline">
+								{{ service.serviceCategory }}
+							</span>
+							<p class="text-muted-foreground mt-1 text-xs">
+								{{ service.serviceCode }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>
+						Bs {{ service.priceEstimateMin }} - Bs
+						{{ service.priceEstimateMax }}
+					</td>
+
+					<td hlmTd>
+						<div class="flex items-center gap-2">
+							<ng-icon name="lucideClock" class="text-muted-foreground" />
+							<span>{{ service.estimatedDurationMinutes }} min</span>
+						</div>
+					</td>
+
+					<td hlmTd>
+						@if (service.isMobileServiceEnabled) {
+							<span hlmBadge class="bg-sky-100 text-sky-700 hover:bg-sky-100">
+								Habilitado
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">No habilitado</span>
+						}
+					</td>
+
+					<td hlmTd>
+						@if (service.isEmergencyServiceEnabled) {
+							<span
+								hlmBadge
+								class="bg-amber-100 text-amber-700 hover:bg-amber-100"
+							>
+								Habilitado
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">No habilitado</span>
+						}
+					</td>
+
+					<td hlmTd>
+						@if (service.isActive) {
+							<span
+								hlmBadge
+								class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+							>
+								Activo
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">Inactivo</span>
+						}
+					</td>
+
+					<td hlmTd>
+						{{ service.updatedAt }}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

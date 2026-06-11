@@ -1,0 +1,98 @@
+<div hlmTableContainer>
+	<table hlmTable>
+		<thead hlmTHead class="bg-gray-200">
+			<tr hlmTr>
+				<th hlmTh>Incidente</th>
+				<th hlmTh>Cliente</th>
+				<th hlmTh>Vehículo</th>
+				<th hlmTh>Prioridad</th>
+				<th hlmTh>Estado</th>
+				<th hlmTh>ETA</th>
+				<th hlmTh>Solicitado</th>
+				<th hlmTh class="text-right">Acciones</th>
+			</tr>
+		</thead>
+
+		<tbody hlmTBody>
+			@for (incident of incidents(); track incident.id) {
+				<tr hlmTr>
+					<td hlmTd class="text-foreground font-medium">
+						<div>
+							<p>{{ incident.title }}</p>
+							<p class="text-muted-foreground text-xs">
+								{{ incident.reportedCategory }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>
+						<div>
+							<p>{{ incident.clientUser.fullName }}</p>
+							<p class="text-muted-foreground text-xs">
+								{{ incident.clientUser.phoneNumber || "Sin teléfono" }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>
+						<div>
+							<p>{{ incident.vehicle.brand }} {{ incident.vehicle.model }}</p>
+							<p class="text-muted-foreground text-xs">
+								{{ incident.vehicle.plateNumber }} · {{ incident.vehicle.year }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>
+						@if (
+							incident.priority === "URGENT" || incident.priority === "HIGH"
+						) {
+							<span hlmBadge class="bg-red-100 text-red-700 hover:bg-red-100">
+								{{ incident.priority }}
+							</span>
+						} @else if (incident.priority === "MEDIUM") {
+							<span
+								hlmBadge
+								class="bg-orange-100 text-orange-700 hover:bg-orange-100"
+							>
+								{{ incident.priority }}
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">{{ incident.priority }}</span>
+						}
+					</td>
+
+					<td hlmTd>
+						<span hlmBadge variant="outline">
+							{{ incident.status }}
+						</span>
+					</td>
+
+					<td hlmTd>
+						@if (incident.routeEtaMinutes !== null) {
+							{{ incident.routeEtaMinutes }} min
+						} @else {
+							Sin ETA
+						}
+					</td>
+
+					<td hlmTd>
+						{{ incident.requestedAt }}
+					</td>
+
+					<td hlmTd class="text-right">
+						<button
+							hlmBtn
+							variant="outline"
+							size="sm"
+							class="cursor-pointer"
+							(click)="onViewIncident(incident)"
+						>
+							<ng-icon name="lucideEye" class="text-foreground" />
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

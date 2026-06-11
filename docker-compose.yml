@@ -1,0 +1,118 @@
+services:
+  serv-mech-db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    #expose:
+    #  - "5432"
+    ports:
+      - "${POSTGRES_HOST_PORT}:5432"
+    volumes:
+      - mech_db_data:/var/lib/postgresql/data
+    networks:
+      - mechanic-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  serv-mech-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: [ "redis-server", "--appendonly", "yes" ]
+    networks:
+      - mechanic-net
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  serv-mech-api:
+    build:
+      context: ./mechanic-api
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${BACKEND_PORT}:8000"
+    volumes:
+      - ./mechanic-api:/app
+    depends_on:
+      serv-mech-db:
+        condition: service_healthy
+      serv-mech-redis:
+        condition: service_healthy
+    networks:
+      - mechanic-net
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request;
+            urllib.request.urlopen('http://127.0.0.1:8000/api/system/health',
+            timeout=5).read()",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  serv-mech-worker:
+    build:
+      context: ./mechanic-api
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    command: [ "/app/scripts/start_worker.sh" ]
+    env_file:
+      - .env
+    volumes:
+      - ./mechanic-api:/app
+      - ./mechanic-api/storage:/app/storage
+    depends_on:
+      serv-mech-db:
+        condition: service_healthy
+      serv-mech-redis:
+        condition: service_healthy
+    networks:
+      - mechanic-net
+
+  serv-mech-web:
+    build:
+      context: ./mechanic-web
+      dockerfile: Dockerfile.dev
+
+    restart: unless-stopped
+    depends_on:
+      - serv-mech-api
+    environment:
+      # enables file watching via polling (for live reload)
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "${FRONTEND_PORT}:4200"
+    volumes:
+      - ./mechanic-web:/app
+      - node_modules:/app/node_modules
+    working_dir: /app
+    networks:
+      - mechanic-net
+
+volumes:
+  mech_db_data:
+  redis_data:
+  node_modules:
+
+networks:
+  mechanic-net:
+    # custom network name (avoid auto-generated compose name)
+    name: mechanic-system_mechanic-net
+    driver: bridge

@@ -1,0 +1,176 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-2xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Detalle del usuario</h3>
+			<p hlmDialogDescription>
+				Información general, roles y estado del usuario seleccionado.
+			</p>
+		</hlm-dialog-header>
+
+		@if (loading()) {
+			<div class="space-y-4 py-2">
+				<hlm-skeleton class="h-20 w-full rounded-xl" />
+				<hlm-skeleton class="h-10 w-full rounded-md" />
+				<hlm-skeleton class="h-10 w-full rounded-md" />
+				<hlm-skeleton class="h-10 w-full rounded-md" />
+			</div>
+		} @else if (error()) {
+			<div class="border-destructive/30 bg-destructive/5 rounded-xl border p-4">
+				<div class="flex items-start gap-3">
+					<ng-icon name="lucideXCircle" class="text-destructive mt-0.5" />
+
+					<div class="space-y-1">
+						<p class="text-destructive font-medium">
+							No se pudo cargar el usuario
+						</p>
+
+						<p class="text-muted-foreground text-sm">
+							{{ error()?.message || "Ocurrió un error inesperado." }}
+						</p>
+					</div>
+				</div>
+			</div>
+		} @else if (user()) {
+			@let selectedUser = user();
+
+			<div class="space-y-6 py-2">
+				<section class="bg-muted/30 rounded-2xl border p-4">
+					<div
+						class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+					>
+						<div class="flex items-center gap-3">
+							<div
+								class="bg-background flex size-12 items-center justify-center rounded-full border"
+							>
+								<ng-icon name="lucideUser" class="size-5" />
+							</div>
+
+							<div>
+								<h3 class="text-lg font-semibold">
+									{{ selectedUser?.fullName }}
+								</h3>
+
+								<p class="text-muted-foreground text-sm">
+									{{ selectedUser?.email }}
+								</p>
+							</div>
+						</div>
+
+						<div class="flex flex-wrap gap-2">
+							@if (selectedUser?.isActive) {
+								<span
+									hlmBadge
+									class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+								>
+									<ng-icon name="lucideCheckCircle" class="mr-1 size-3" />
+									Activo
+								</span>
+							} @else {
+								<span hlmBadge variant="outline">
+									<ng-icon name="lucideXCircle" class="mr-1 size-3" />
+									Inactivo
+								</span>
+							}
+
+							@if (selectedUser?.isSuperuser) {
+								<span hlmBadge variant="secondary"> Superusuario </span>
+							}
+						</div>
+					</div>
+				</section>
+
+				<section class="grid gap-3 sm:grid-cols-2">
+					<div class="rounded-xl border p-4">
+						<div
+							class="text-muted-foreground mb-1 flex items-center gap-2 text-sm"
+						>
+							<ng-icon name="lucideMail" />
+							Correo
+						</div>
+
+						<p class="font-medium">
+							{{ selectedUser?.email }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<div
+							class="text-muted-foreground mb-1 flex items-center gap-2 text-sm"
+						>
+							<ng-icon name="lucidePhone" />
+							Teléfono
+						</div>
+
+						<p class="font-medium">
+							{{ selectedUser?.phoneNumber || "Sin teléfono" }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<div
+							class="text-muted-foreground mb-1 flex items-center gap-2 text-sm"
+						>
+							<ng-icon name="lucideCalendar" />
+							Creado
+						</div>
+
+						<p class="font-medium">
+							{{ selectedUser?.createdAt }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<div
+							class="text-muted-foreground mb-1 flex items-center gap-2 text-sm"
+						>
+							<ng-icon name="lucideCalendar" />
+							Modificado
+						</div>
+
+						<p class="font-medium">
+							{{ selectedUser?.updatedAt }}
+						</p>
+					</div>
+				</section>
+
+				<section class="rounded-xl border p-4">
+					<div class="mb-3 flex items-center gap-2">
+						<ng-icon name="lucideShield" class="text-muted-foreground" />
+
+						<h4 class="font-medium">Roles asignados</h4>
+					</div>
+
+					@if (selectedUser?.roles?.length) {
+						<div class="flex flex-wrap gap-2">
+							@for (role of selectedUser?.roles; track role.id) {
+								<span hlmBadge variant="outline">
+									{{ role.name }}
+								</span>
+							}
+						</div>
+					} @else {
+						<p class="text-muted-foreground text-sm">
+							Este usuario no tiene roles asignados.
+						</p>
+					}
+				</section>
+			</div>
+
+			<hlm-dialog-footer>
+				<button
+					hlmBtn
+					variant="outline"
+					class="cursor-pointer"
+					(click)="onOpenChange(false)"
+				>
+					Cerrar
+				</button>
+
+				<button hlmBtn class="cursor-pointer" (click)="onEditUser()">
+					<ng-icon name="lucidePencil" />
+					Editar usuario
+				</button>
+			</hlm-dialog-footer>
+		}
+	</hlm-dialog-content>
+</hlm-dialog>

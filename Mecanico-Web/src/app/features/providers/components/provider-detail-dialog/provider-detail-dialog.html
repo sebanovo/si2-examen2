@@ -1,0 +1,192 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-2xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Detalle del proveedor</h3>
+			<p hlmDialogDescription>
+				Información general, propietario, capacidad y estado operativo.
+			</p>
+		</hlm-dialog-header>
+
+		@if (loading()) {
+			<div class="space-y-4 py-2">
+				<hlm-skeleton class="h-24 w-full rounded-xl" />
+				<hlm-skeleton class="h-36 w-full rounded-xl" />
+				<hlm-skeleton class="h-28 w-full rounded-xl" />
+			</div>
+		} @else if (error()) {
+			<div class="border-destructive/30 bg-destructive/5 rounded-xl border p-4">
+				<div class="flex items-start gap-3">
+					<ng-icon name="lucideXCircle" class="text-destructive mt-0.5" />
+
+					<div>
+						<p class="text-destructive font-medium">
+							No se pudo cargar el proveedor
+						</p>
+
+						<p class="text-muted-foreground text-sm">
+							{{ error()?.message || "Ocurrió un error inesperado." }}
+						</p>
+					</div>
+				</div>
+			</div>
+		} @else if (provider()) {
+			@let currentProvider = provider();
+
+			<div class="space-y-6 py-2">
+				<section class="bg-muted/30 rounded-2xl border p-4">
+					<div
+						class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"
+					>
+						<div class="flex items-start gap-3">
+							<div
+								class="bg-background flex size-12 items-center justify-center rounded-full border"
+							>
+								<ng-icon name="lucideBuilding2" class="size-5" />
+							</div>
+
+							<div>
+								<h3 class="text-lg font-semibold">
+									{{ currentProvider?.businessName }}
+								</h3>
+
+								<p class="text-muted-foreground text-sm">
+									{{ currentProvider?.legalName }}
+								</p>
+
+								<p class="text-muted-foreground mt-2 text-sm">
+									{{ currentProvider?.description || "Sin descripción." }}
+								</p>
+							</div>
+						</div>
+
+						<div class="flex flex-wrap gap-2">
+							@if (currentProvider?.isActive) {
+								<span
+									hlmBadge
+									class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+								>
+									<ng-icon name="lucideCheckCircle" class="mr-1 size-3" />
+									Activo
+								</span>
+							} @else {
+								<span hlmBadge variant="outline">Inactivo</span>
+							}
+
+							@if (currentProvider?.isAvailable) {
+								<span hlmBadge class="bg-sky-100 text-sky-700 hover:bg-sky-100">
+									Disponible
+								</span>
+							} @else {
+								<span hlmBadge variant="outline">No disponible</span>
+							}
+						</div>
+					</div>
+				</section>
+
+				<section class="grid gap-3 md:grid-cols-2">
+					<div class="rounded-xl border p-4">
+						<div
+							class="text-muted-foreground mb-1 flex items-center gap-2 text-sm"
+						>
+							<ng-icon name="lucideMail" />
+							Correo de contacto
+						</div>
+						<p class="font-medium">{{ currentProvider?.contactEmail }}</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<div
+							class="text-muted-foreground mb-1 flex items-center gap-2 text-sm"
+						>
+							<ng-icon name="lucidePhone" />
+							Teléfono
+						</div>
+						<p class="font-medium">
+							{{ currentProvider?.contactPhone || "Sin teléfono" }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4 md:col-span-2">
+						<div
+							class="text-muted-foreground mb-1 flex items-center gap-2 text-sm"
+						>
+							<ng-icon name="lucideMapPin" />
+							Ubicación
+						</div>
+						<p class="font-medium">
+							{{ currentProvider?.city }} - {{ currentProvider?.address }}
+						</p>
+						<p class="text-muted-foreground text-xs">
+							Lat: {{ currentProvider?.baseLatitude }}, Lng:
+							{{ currentProvider?.baseLongitude }}
+						</p>
+					</div>
+				</section>
+
+				<section class="grid gap-3 md:grid-cols-4">
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground text-sm">Capacidad</p>
+						<p class="text-xl font-semibold">
+							{{ currentProvider?.availableCapacity }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground text-sm">Servicios activos</p>
+						<p class="text-xl font-semibold">
+							{{ currentProvider?.activeServicesCount }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground text-sm">Técnicos</p>
+						<p class="text-xl font-semibold">
+							{{ currentProvider?.techniciansCount }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground text-sm">Rating</p>
+						<p class="text-xl font-semibold">
+							{{ currentProvider?.averageRating }}
+						</p>
+					</div>
+				</section>
+
+				<section class="rounded-xl border p-4">
+					<div class="mb-3 flex items-center gap-2">
+						<ng-icon name="lucideUser" class="text-muted-foreground" />
+						<h4 class="font-medium">Administrador proveedor</h4>
+					</div>
+
+					<div class="grid gap-3 md:grid-cols-2">
+						<div>
+							<p class="text-muted-foreground text-sm">Nombre</p>
+							<p class="font-medium">
+								{{ currentProvider?.ownerUser?.fullName }}
+							</p>
+						</div>
+
+						<div>
+							<p class="text-muted-foreground text-sm">Correo</p>
+							<p class="font-medium">
+								{{ currentProvider?.ownerUser?.email }}
+							</p>
+						</div>
+					</div>
+				</section>
+			</div>
+
+			<hlm-dialog-footer>
+				<button
+					hlmBtn
+					variant="outline"
+					class="cursor-pointer"
+					(click)="onOpenChange(false)"
+				>
+					Cerrar
+				</button>
+			</hlm-dialog-footer>
+		}
+	</hlm-dialog-content>
+</hlm-dialog>

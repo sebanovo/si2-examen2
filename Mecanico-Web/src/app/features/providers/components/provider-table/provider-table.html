@@ -1,0 +1,158 @@
+<div hlmTableContainer>
+	<table hlmTable>
+		<thead hlmTHead class="bg-gray-200">
+			<tr hlmTr>
+				<th hlmTh>Negocio</th>
+				<th hlmTh>Tipo</th>
+				<th hlmTh>Contacto</th>
+				<th hlmTh>Ciudad</th>
+				<th hlmTh>Capacidad</th>
+				<th hlmTh>Estado</th>
+				<th hlmTh>Disponible</th>
+				<th hlmTh class="text-right">Acciones</th>
+			</tr>
+		</thead>
+
+		<tbody hlmTBody>
+			@for (provider of providers(); track provider.id) {
+				<tr hlmTr>
+					<td hlmTd class="text-foreground font-medium">
+						<div>
+							<p>{{ provider.businessName }}</p>
+							<p class="text-muted-foreground text-xs">
+								{{ provider.legalName }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>
+						<span hlmBadge variant="outline">
+							{{ provider.providerType }}
+						</span>
+					</td>
+
+					<td hlmTd>
+						<div>
+							<p>{{ provider.contactEmail }}</p>
+							<p class="text-muted-foreground text-xs">
+								{{ provider.contactPhone || "Sin teléfono" }}
+							</p>
+						</div>
+					</td>
+
+					<td hlmTd>{{ provider.city }}</td>
+
+					<td hlmTd>
+						{{ provider.currentActiveServices }} /
+						{{ provider.maxConcurrentServices }}
+					</td>
+
+					<td hlmTd>
+						@if (provider.isActive) {
+							<span
+								hlmBadge
+								class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+							>
+								Activo
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">Inactivo</span>
+						}
+					</td>
+
+					<td hlmTd>
+						@if (provider.isAvailable) {
+							<span hlmBadge class="bg-sky-100 text-sky-700 hover:bg-sky-100">
+								Disponible
+							</span>
+						} @else {
+							<span hlmBadge variant="outline">No disponible</span>
+						}
+					</td>
+
+					<td hlmTd class="text-right">
+						<div class="flex items-center justify-end gap-2">
+							<button
+								hlmBtn
+								variant="outline"
+								size="sm"
+								class="cursor-pointer"
+								(click)="onViewProvider(provider)"
+							>
+								<ng-icon name="lucideEye" class="text-foreground" />
+							</button>
+
+							<button
+								hlmBtn
+								variant="outline"
+								size="sm"
+								class="cursor-pointer"
+								(click)="onEditOperations(provider)"
+							>
+								<ng-icon name="lucidePencil" class="text-foreground" />
+							</button>
+
+							<!-- menu de acciones -->
+							<button
+								hlmBtn
+								variant="outline"
+								size="icon"
+								[hlmDropdownMenuTrigger]="menu"
+							>
+								<ng-icon name="lucideMoreVertical" />
+							</button>
+
+							<ng-template #menu>
+								<hlm-dropdown-menu class="w-52">
+									<hlm-dropdown-menu-group>
+										<!-- <button hlmDropdownMenuItem>
+											<ng-icon name="lucideMailCheck" class="text-foreground" />
+											<span>Mark as Read</span>
+										</button> -->
+										<button hlmDropdownMenuItem>
+											<ng-icon name="lucideArchive" class="text-foreground" />
+											<span>Archive</span>
+										</button>
+
+										<button
+											hlmDropdownMenuItem
+											(click)="onAddTechnicias(provider)"
+										>
+											<ng-icon name="lucideUserPlus" class="text-foreground" />
+											<span>Agregar tecnicos</span>
+										</button>
+									</hlm-dropdown-menu-group>
+
+									<hlm-dropdown-menu-separator />
+
+									<hlm-dropdown-menu-group>
+										<button
+											hlmDropdownMenuItem
+											(click)="onListarServicios(provider)"
+										>
+											<ng-icon name="lucideWrench" class="text-foreground" />
+											<span>Lista de Servicios</span>
+										</button>
+
+										<button hlmDropdownMenuItem>
+											<ng-icon name="lucidePaperclip" class="text-foreground" />
+											<span>Evidencias</span>
+										</button>
+
+										<button hlmDropdownMenuItem>
+											<ng-icon
+												name="lucideShieldAlert"
+												class="text-foreground"
+											/>
+											<span>Incidentes</span>
+										</button>
+									</hlm-dropdown-menu-group>
+								</hlm-dropdown-menu>
+							</ng-template>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

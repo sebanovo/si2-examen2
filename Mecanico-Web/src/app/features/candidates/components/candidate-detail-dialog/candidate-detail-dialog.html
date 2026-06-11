@@ -1,0 +1,230 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-4xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Detalle del candidato</h3>
+			<p hlmDialogDescription>
+				Información del incidente y criterios de recomendación.
+			</p>
+		</hlm-dialog-header>
+
+		@if (loading()) {
+			<div class="space-y-4 py-2">
+				<hlm-skeleton class="h-28 w-full rounded-xl" />
+				<hlm-skeleton class="h-36 w-full rounded-xl" />
+				<hlm-skeleton class="h-28 w-full rounded-xl" />
+			</div>
+		} @else if (error()) {
+			<div class="border-destructive/30 bg-destructive/5 rounded-xl border p-4">
+				<div class="flex items-start gap-3">
+					<ng-icon name="lucideXCircle" class="text-destructive mt-0.5" />
+
+					<div>
+						<p class="text-destructive font-medium">
+							No se pudo cargar el candidato
+						</p>
+						<p class="text-muted-foreground text-sm">
+							{{ error()?.message || "Ocurrió un error inesperado." }}
+						</p>
+					</div>
+				</div>
+			</div>
+		} @else if (candidate()) {
+			@let currentCandidate = candidate();
+
+			<div class="max-h-[70vh] space-y-6 overflow-y-auto pr-2">
+				<section class="bg-muted/30 rounded-2xl border p-4">
+					<div
+						class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"
+					>
+						<div class="space-y-2">
+							<div class="flex flex-wrap items-center gap-2">
+								<h3 class="text-lg font-semibold">
+									{{ currentCandidate?.incident?.title }}
+								</h3>
+
+								@if (currentCandidate?.status === "AVAILABLE") {
+									<span
+										hlmBadge
+										class="bg-sky-100 text-sky-700 hover:bg-sky-100"
+									>
+										Disponible
+									</span>
+								} @else if (currentCandidate?.status === "ACCEPTED") {
+									<span
+										hlmBadge
+										class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+									>
+										Aceptado
+									</span>
+								} @else {
+									<span hlmBadge variant="outline">
+										{{ currentCandidate?.status }}
+									</span>
+								}
+
+								<span hlmBadge variant="secondary">
+									Rank #{{ currentCandidate?.recommendationRank }}
+								</span>
+							</div>
+
+							<p class="text-muted-foreground text-sm">
+								{{ currentCandidate?.incident?.description }}
+							</p>
+						</div>
+
+						<div class="bg-background rounded-xl border p-3 text-sm">
+							<p class="text-muted-foreground">Score</p>
+							<p class="text-2xl font-semibold">
+								{{ currentCandidate?.score }}
+							</p>
+						</div>
+					</div>
+				</section>
+
+				<section class="grid gap-3 md:grid-cols-3">
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground flex items-center gap-2 text-sm">
+							<ng-icon name="lucideRoute" />
+							Distancia
+						</p>
+						<p class="font-medium">{{ currentCandidate?.distanceKm }} km</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground flex items-center gap-2 text-sm">
+							<ng-icon name="lucideStar" />
+							Rating proveedor
+						</p>
+						<p class="font-medium">
+							{{ currentCandidate?.providerAverageRatingSnapshot }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground flex items-center gap-2 text-sm">
+							<ng-icon name="lucideWrench" />
+							Capacidad disponible
+						</p>
+						<p class="font-medium">
+							{{ currentCandidate?.providerAvailableCapacitySnapshot }}
+						</p>
+					</div>
+				</section>
+
+				<section class="grid gap-3 md:grid-cols-2">
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground flex items-center gap-2 text-sm">
+							<ng-icon name="lucideMapPin" />
+							Ubicación incidente
+						</p>
+
+						<p class="font-medium">
+							{{
+								currentCandidate?.incident?.addressReference || "Sin referencia"
+							}}
+						</p>
+
+						<p class="text-muted-foreground text-xs">
+							Lat: {{ currentCandidate?.incident?.incidentLatitude }}, Lng:
+							{{ currentCandidate?.incident?.incidentLongitude }}
+						</p>
+					</div>
+
+					<div class="rounded-xl border p-4">
+						<p class="text-muted-foreground text-sm">Servicios requeridos</p>
+
+						<div class="mt-2 flex flex-wrap gap-2">
+							@for (
+								code of currentCandidate?.requiredServiceCodes;
+								track code
+							) {
+								<span hlmBadge variant="outline">{{ code }}</span>
+							}
+						</div>
+
+						<p class="text-muted-foreground mt-4 text-sm">
+							Servicios coincidentes
+						</p>
+
+						<div class="mt-2 flex flex-wrap gap-2">
+							@for (code of currentCandidate?.matchedServiceCodes; track code) {
+								<span
+									hlmBadge
+									class="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+								>
+									{{ code }}
+								</span>
+							}
+						</div>
+					</div>
+				</section>
+
+				@if (currentCandidate?.incident?.structuredSummary) {
+					<section class="rounded-xl border p-4">
+						<div class="mb-2 flex items-center gap-2">
+							<ng-icon name="lucideSparkles" class="text-muted-foreground" />
+							<h4 class="font-medium">Resumen inteligente</h4>
+						</div>
+
+						<p class="text-muted-foreground text-sm">
+							{{ currentCandidate?.incident?.structuredSummary }}
+						</p>
+					</section>
+				}
+
+				<section class="rounded-xl border p-4">
+					<h4 class="mb-3 font-medium">Razones de recomendación</h4>
+
+					<div class="grid gap-3 md:grid-cols-2">
+						@for (
+							item of currentCandidate?.rationale | keyvalue;
+							track item.key
+						) {
+							<div class="bg-muted/30 rounded-xl border p-3">
+								<p class="text-sm font-medium">{{ item.key }}</p>
+								<p class="text-muted-foreground text-sm">
+									{{ item.value }}
+								</p>
+							</div>
+						}
+					</div>
+				</section>
+			</div>
+
+			<hlm-dialog-footer class="mt-5 border-t pt-4">
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					(click)="onOpenChange(false)"
+				>
+					Cerrar
+				</button>
+
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					[disabled]="!canAct(currentCandidate!)"
+					(click)="onRejectCandidate()"
+				>
+					<ng-icon name="lucideX" />
+					Rechazar
+				</button>
+
+				<button
+					hlmBtn
+					type="button"
+					class="cursor-pointer"
+					[disabled]="!canAct(currentCandidate!)"
+					(click)="onAcceptCandidate()"
+				>
+					<ng-icon name="lucideCheck" />
+					Aceptar
+				</button>
+			</hlm-dialog-footer>
+		}
+	</hlm-dialog-content>
+</hlm-dialog>

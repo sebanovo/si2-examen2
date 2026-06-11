@@ -1,0 +1,42 @@
+@let currentEmpresa = empresa();
+
+@if (currentEmpresa) {
+	<section hlmCard>
+		<div hlmCardHeader>
+			<h2 hlmCardTitle>Operación</h2>
+			<p hlmCardDescription>Resumen operativo actual.</p>
+		</div>
+
+		<div hlmCardContent class="grid gap-3 sm:grid-cols-2">
+			<div class="rounded-2xl border p-4">
+				<ng-icon name="lucideUsers" class="text-muted-foreground" />
+				<p class="text-muted-foreground mt-2 text-sm">Técnicos</p>
+				<p class="text-2xl font-semibold">
+					{{ currentEmpresa.techniciansCount }}
+				</p>
+			</div>
+
+			<div class="rounded-2xl border p-4">
+				<ng-icon name="lucideActivity" class="text-muted-foreground" />
+				<p class="text-muted-foreground mt-2 text-sm">Técnicos disponibles</p>
+				<p class="text-2xl font-semibold">
+					{{ currentEmpresa.availableTechniciansCount }}
+				</p>
+			</div>
+
+			<div class="rounded-2xl border p-4">
+				<ng-icon name="lucideWrench" class="text-muted-foreground" />
+				<p class="text-muted-foreground mt-2 text-sm">Capacidad disponible</p>
+				<p class="text-2xl font-semibold">
+					{{ currentEmpresa.availableCapacity }}
+				</p>
+			</div>
+
+			<div class="rounded-2xl border p-4">
+				<ng-icon name="lucideStar" class="text-muted-foreground" />
+				<p class="text-muted-foreground mt-2 text-sm">Rating promedio</p>
+				<p class="text-2xl font-semibold">{{ currentEmpresa.averageRating }}</p>
+			</div>
+		</div>
+	</section>
+}

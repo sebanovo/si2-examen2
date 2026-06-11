@@ -1,0 +1,59 @@
+name: mechanic_mobile
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.4 # para generar los iconos al hacer build en distintas plataformas
+  cupertino_icons: ^1.0.8
+  http: ^1.6.0
+  flutter_dotenv: ^6.0.0
+  go_router: ^17.2.0 # nevegador inferior sencillo
+  shared_preferences: ^2.5.4
+  speech_to_text: ^7.3.0 # (Agregar permisos)
+  openai_dart: ^4.0.1 # libreria para usar el LLM de openai para usar el modelo de OpenRouter 
+  image_picker: ^1.2.1 # (Agregar permisos)
+  dio: ^5.9.2 # (El axios de flutter)
+  get_it: ^9.2.1 #(Para injection de dependencias)
+  http_parser: ^4.1.2 #(Para serializar formatos de image/audio/etc)
+  firebase_core: ^4.7.0
+  firebase_messaging: ^16.2.0 #(Para notificaciones push)
+  flutter_map: ^8.3.0 #(Para maás en flutter alternativa a google_maps)
+  geolocator: ^14.0.2 #(Obtener coordenadas del dispositivo)
+  latlong2: ^0.9.1 #(Para calcular latitud y longitud)
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
+    - assets/
+
+# Todavía no hay logo
+# flutter_launcher_icons:
+#   image_path: "assets/logo.png" 
+#   android: true
+#   ios: true
+#   remove_alpha_ios: true
+#   web:
+#     generate: true
+#     image_path: "assets/logo.png"
+#   windows:
+#     generate: true
+#     image_path: "assets/logo.png"
+#   macos:
+#     generate: true
+#     image_path: "assets/logo.png"
+#   linux:
+#     generate: true
+#     image_path: "assets/logo.png"

@@ -1,0 +1,164 @@
+<hlm-dialog [state]="open() ? 'open' : 'closed'" (closed)="onOpenChange(false)">
+	<hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-2xl">
+		<hlm-dialog-header>
+			<h3 hlmDialogTitle>Editar servicio</h3>
+			<p hlmDialogDescription>
+				Actualiza la información del servicio de catálogo.
+			</p>
+		</hlm-dialog-header>
+
+		<form class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+			@if (catalogService()) {
+				<section class="bg-muted/30 rounded-2xl border p-4">
+					<div class="flex items-center gap-3">
+						<div
+							class="bg-background flex size-10 items-center justify-center rounded-full border"
+						>
+							<ng-icon name="lucideSettings2" />
+						</div>
+
+						<div>
+							<p class="font-medium">{{ catalogService()?.title }}</p>
+							<p class="text-muted-foreground text-sm">
+								Código: {{ catalogService()?.code }}
+							</p>
+						</div>
+					</div>
+				</section>
+			}
+
+			<div class="grid gap-4 sm:grid-cols-2">
+				<hlm-field>
+					<label hlmLabel for="editCategory">Categoría</label>
+					<input
+						hlmInput
+						id="editCategory"
+						type="text"
+						formControlName="category"
+					/>
+
+					@if (
+						form.controls.category.invalid && form.controls.category.touched
+					) {
+						<p class="text-destructive text-sm">La categoría es obligatoria.</p>
+					}
+				</hlm-field>
+
+				<hlm-field>
+					<label hlmLabel for="editSortOrder">Orden</label>
+					<input
+						hlmInput
+						id="editSortOrder"
+						type="number"
+						min="0"
+						formControlName="sortOrder"
+					/>
+
+					@if (
+						form.controls.sortOrder.invalid && form.controls.sortOrder.touched
+					) {
+						<p class="text-destructive text-sm">
+							El orden debe ser mayor o igual a 0.
+						</p>
+					}
+				</hlm-field>
+
+				<hlm-field class="sm:col-span-2">
+					<label hlmLabel for="editTitle">Título</label>
+					<input hlmInput id="editTitle" type="text" formControlName="title" />
+
+					@if (form.controls.title.invalid && form.controls.title.touched) {
+						<p class="text-destructive text-sm">El título es obligatorio.</p>
+					}
+				</hlm-field>
+
+				<hlm-field class="sm:col-span-2">
+					<label hlmLabel for="editDescription">Descripción</label>
+					<input
+						hlmInput
+						id="editDescription"
+						type="text"
+						formControlName="description"
+					/>
+				</hlm-field>
+			</div>
+
+			<div class="grid gap-4 sm:grid-cols-3">
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Servicio móvil</p>
+					<p class="text-muted-foreground mb-3 text-sm">
+						Disponible a domicilio.
+					</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+						<hlm-switch formControlName="supportsMobileService" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Emergencia</p>
+					<p class="text-muted-foreground mb-3 text-sm">
+						Soporta atención urgente.
+					</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+						<hlm-switch formControlName="supportsEmergencyService" />
+					</div>
+				</div>
+
+				<div class="rounded-xl border p-4">
+					<p class="font-medium">Estado</p>
+					<p class="text-muted-foreground mb-3 text-sm">Visible en catálogo.</p>
+
+					<div class="flex items-center justify-between gap-3">
+						<span class="text-sm">Activo</span>
+						<hlm-switch formControlName="isActive" />
+					</div>
+				</div>
+			</div>
+
+			@if (error()) {
+				<div
+					class="border-destructive/30 bg-destructive/5 rounded-xl border p-4"
+				>
+					<p class="text-destructive font-medium">
+						No se pudo actualizar el servicio
+					</p>
+					<p class="text-muted-foreground text-sm">
+						{{ error()?.message || "Ocurrió un error inesperado." }}
+					</p>
+				</div>
+			}
+
+			<hlm-dialog-footer>
+				<button
+					hlmBtn
+					type="button"
+					variant="outline"
+					class="cursor-pointer"
+					[disabled]="loading()"
+					(click)="onOpenChange(false)"
+				>
+					<ng-icon name="lucideX" />
+					Cancelar
+				</button>
+
+				<button
+					hlmBtn
+					type="submit"
+					class="cursor-pointer"
+					[disabled]="loading()"
+				>
+					<ng-icon name="lucideSave" />
+					@if (loading()) {
+						Guardando...
+					} @else {
+						Guardar cambios
+					}
+				</button>
+			</hlm-dialog-footer>
+		</form>
+	</hlm-dialog-content>
+</hlm-dialog>
